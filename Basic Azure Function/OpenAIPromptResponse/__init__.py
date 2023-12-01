@@ -3,7 +3,7 @@ import openai
 import azure.functions as func
 import pyodbc
 
-SecretKey = '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'
+SecretKey = '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'
 openai.api_key = SecretKey
 
 def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpResponse:
@@ -18,18 +18,12 @@ def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpRe
     except:
         return "No prompt provided!"
     
-    Output = CallOpenAI(MyPrompt)
-
-    #Save the message in a database:
-
-    #Return as json:
-    
-    #toDoItems.set(func.SqlRow({"id": uuid.uuid4(), "messageTime": datetime.now, "introMessage": Output}))
+    Output = CallOpenAI(MyPrompt,SessionID)
     return func.HttpResponse(Output, status_code=200)
-    #return func.HttpResponse({"answer":Output}, status_code=200)
 
 #Get a response from OpenAI
-def CallOpenAI(prompt):
+def CallOpenAI(prompt,SessionID):
+    SavePrompt(prompt,SessionID)
     client = openai.OpenAI(api_key =  SecretKey)
     response = client.chat.completions.create(
         model = "gpt-3.5-turbo"
@@ -41,17 +35,16 @@ def CallOpenAI(prompt):
             , {"role" : "user", "content" : prompt}
         ]
     )
-    return response.choices[0].message.content
-    #return response.['choices'][0]['message']['content']
-    #return openai.VERSION
+    responseMessage = response.choices[0].message.content
+    SaveResponse(responseMessage,SessionID)
+    return responseMessage
 
-def SavePrompt(prompt):
+def SavePrompt(prompt,SessionID):
     try:
-        messageToSave = messageToSave.replace("'","''") 
+        prompt = prompt.replace("'","''") 
         conn = get_conn()
         cursor = conn.cursor()
-        sql = f"INSERT INTO dbo.TestIntroMessage(pk, promptTime, prompt) VALUES(ISNULL((SELECT MAX(pk) FROM TestIntroMessage),0) + 1," \
-        + "SYSDATETIME() AT TIME ZONE 'Alaskan Standard Time','" + prompt + "')"
+        sql = f"EXEC SavePrompt @SessionID = " + SessionID + ", @Prompt = '" + prompt + "'"
         # Table should be created ahead of time in production app.
         cursor.execute(sql)
         conn.commit()
@@ -60,6 +53,23 @@ def SavePrompt(prompt):
         if 'sql' in locals(): 
             #print(sql)
             return "Error writing to DB! SQL attempted: " + sql
+        else: return "Error writing to DB! SQL variable never initialized."
+    return "DB Write Success!"
+
+def SaveResponse(response,SessionID):
+    try:
+        response = response.replace("'","''") 
+        conn = get_conn()
+        cursor = conn.cursor()
+        sql = f"EXEC SaveResponse @SessionID = " + SessionID + ", @Response = '" + response + "'"
+        # Table should be created ahead of time in production app.
+        cursor.execute(sql)
+        conn.commit()
+    except Exception as e:
+        logging.error(e)
+        if 'sql' in locals(): 
+            #print(sql)
+            return "Error writing to DB! SQL attempted: " + sql 
         else: return "Error writing to DB! SQL variable never initialized."
     return "DB Write Success!"
     
