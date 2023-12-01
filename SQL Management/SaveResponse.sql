@@ -5,7 +5,7 @@ Description:
     Saves a response for the given session.
     Automatically generates prompt number and time.
 */
-CREATE PROCEDURE SaveResponse @SessionID INT, @Response VARCHAR(MAX) AS BEGIN
+ALTER PROCEDURE SaveResponse @SessionID INT, @Response VARCHAR(MAX) AS BEGIN
     
     DECLARE @errormsg VARCHAR(100)
     --Input washing for session ID:
@@ -25,6 +25,6 @@ CREATE PROCEDURE SaveResponse @SessionID INT, @Response VARCHAR(MAX) AS BEGIN
     END
 
     --Since row numbers are suppossed to be reserved ahead of time, the first prompt will have a row in the table already.
-    UPDATE PromptLog SET response = @Response, responseTime = SYSDATETIME() WHERE sessionID = @SessionID AND promptNum = @promptNum
+    UPDATE PromptLog SET response = @Response, responseTime = SYSDATETIME() AT TIME ZONE 'Alaskan Standard Time' WHERE sessionID = @SessionID AND promptNum = @promptNum
 
 END

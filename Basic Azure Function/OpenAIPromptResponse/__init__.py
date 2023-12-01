@@ -14,6 +14,7 @@ def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpRe
     try:
         req_body = req.get_json()
         MyPrompt = req_body.get('prompt')
+        SessionID = req_body.get('sessionid')
     except:
         return "No prompt provided!"
     

@@ -19,17 +19,17 @@ ALTER PROCEDURE SavePrompt @SessionID INT, @Prompt VARCHAR(MAX) AS BEGIN
     SELECT @promptNum = MAX(ISNULL(promptNum,0)) FROM PromptLog WHERE sessionID = @SessionID
 
     --Sequence washing, make sure this is called in the right order:
-    IF EXISTS (SELECT * FROM PromptLog WHERE sessionID = @SessionID AND promptNum = @promptNum AND prompt IS NOT NULL) BEGIN
+    IF EXISTS (SELECT * FROM PromptLog WHERE sessionID = @SessionID AND promptNum = @promptNum AND prompt IS NOT NULL AND response IS NULL) BEGIN
         SET @errormsg = CONCAT('The session ID ', @SessionID, ' is ready for a response, not a new prompt!');
         THROW 51000, @errormsg, 1;
     END
 
     --Since row numbers are suppossed to be reserved ahead of time, the first prompt will have a row in the table already.
     IF (0 = @promptNum) BEGIN
-        UPDATE PromptLog SET promptNum = 1, prompt = @Prompt, promptTime = SYSDATETIME() WHERE sessionID = @SessionID
+        UPDATE PromptLog SET promptNum = 1, prompt = @Prompt, promptTime = SYSDATETIME() AT TIME ZONE 'Alaskan Standard Time' WHERE sessionID = @SessionID
     END ELSE BEGIN
         INSERT INTO PromptLog (sessionid, promptNum, prompt, promptTime)
-        VALUES(@SessionID,@promptNum + 1,@Prompt, SYSDATETIME())
+        VALUES(@SessionID,@promptNum + 1,@Prompt, SYSDATETIME() AT TIME ZONE 'Alaskan Standard Time')
     END
 
 END

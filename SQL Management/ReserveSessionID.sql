@@ -10,6 +10,6 @@ ALTER PROCEDURE ReserveSessionID AS BEGIN
     DECLARE @newID INT
     SELECT @newID = ISNULL(MAX(ISNULL(sessionid,0)),0) + 1 FROM PromptLog
     INSERT INTO PromptLog(sessionID, promptNum) VALUES (@newID, 0)
-    SELECT @newID
+    SELECT newID = @newID
 
 END
