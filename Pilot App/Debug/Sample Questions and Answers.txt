@@ -1,0 +1,9 @@
+Please write a short email reminding my committee about my proposal defense tomorrow morning.
+
+1. My committee members are Kimberly Binsted, Martha Crosby, Nurit Kirshenbaum, Peter Washington, and Michael Liu.
+
+2. The time is 8AM and the location is over Zoom.
+
+3. No additional documents required
+
+4. The defense is on the topic of Large Language Models that ask Clarifying Questions.

@@ -1,0 +1,158 @@
+<html>
+	<title>
+		Clarifying Questions Pilot Debug
+	</title>
+	<head>
+	<h1>Prompt Response With Clarifying Questions -- Manual Context</h1>
+	<hr/>
+	</head>
+	<Body>
+	<table>
+		<tr>
+			<td>
+				<div style="height:400px;width:600px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;" id="ChatScroll">
+				</div>
+			</td>
+			<td>
+				<div style="height:400px;width:600px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;" id="LogScroll">
+				</div>
+			</td>
+		
+		</tr>
+	</table>
+	</br>
+	<textarea id="prompt" name="txt_prompt" rows="3" cols="50" style="font:16px/26px Georgia, Garamond, Serif"></textarea>
+	<button type="button" onclick="myFunction()" id="btn_Send">Send</button>
+	
+	</body>
+</html>
+<script>
+var PromptNum = 0;
+var WaitingForAPI = false;
+
+function myFunction() {
+	PromptNum ++;
+	addLabelFromPrompt();
+	var userPrompt = document.getElementById("prompt").value;
+	var fullPrompt = "";
+	
+	//Check the step we are on, and modify the prompt accordingly
+	switch(PromptNum){
+		case 1:
+			fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + userPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list."
+			var Ambiguity = APICall(fullPrompt);
+			chatResponse(Ambiguity)
+			fullPrompt = "Consider the following request:\nuser:\"" + userPrompt + "\" and the following identified points of ambiguity: \"" + Ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified."
+				APICall(fullPrompt);
+			break;
+		case 2:
+			
+			break;
+		case 3:
+			fullPrompt = userPrompt;
+			break;
+	}
+	document.getElementById("prompt").value = PromptNum;
+}
+
+function getPrompt(){
+	return document.getElementById("prompt").value;
+}
+function addLabelFromPrompt(){
+	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#FFFFFF\">" + getPrompt() + "</div>";
+	document.getElementById("ChatScroll").innerHTML= html;
+	ScrollToBottom();
+	document.getElementById("btn_Send").disabled = 1;
+	document.getElementById("btn_Send").innerHTML = "Please wait...";
+}
+function chatResponse(response){
+	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#DDEEFF\">" + response + "</div>";
+	document.getElementById("ChatScroll").innerHTML= html;
+	ScrollToBottom();
+}
+function logResponse(response){
+	html = document.getElementById("LogScroll").innerHTML + "<div style=\"background-color:#FFEEDD\">" + response + "</div>";
+	document.getElementById("LogScroll").innerHTML= html;
+	ScrollToBottom();
+}
+function logPrompt(prompt){
+	console.log(prompt);
+	html = document.getElementById("LogScroll").innerHTML + "<div style=\"background-color:#EEEEEE\">" + prompt + "</div>";
+	document.getElementById("LogScroll").innerHTML= html;
+	ScrollToBottom();
+}
+function sleep(ms) {
+	setTimeout(() => {  return; }, ms);;
+}
+function waitForAPI(timeout_ms){
+	console.log(WaitingForAPI);
+	if(!WaitingForAPI) return;
+	var startTime = new Date();	
+	while(WaitingForAPI == true){
+		//add a Timeout:
+		var currentTime = new Date();
+		var dif = currentTime.getTime() - startTime.getTime();
+		if (timeout_ms < dif) return "API Timed out!"	;
+		sleep(100);
+	}
+	console.log("Timed out!");
+}
+function APICall(prompt){
+	//waitForAPI(10000);
+	WaitingForAPI = true;
+	
+	var params = {"prompt": prompt};
+	logPrompt(prompt);
+	
+	const request = new XMLHttpRequest();
+	FunctionName = "OpenAIPromptResponse"
+	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
+	request.open("POST", URI);
+	request.send(JSON.stringify(params))
+	//request.onload = ()=>{
+		if(request.status == 200) {
+			console.log(request.response);
+			logResponse(request.response);
+			document.getElementById("btn_Send").disabled = 0;
+			document.getElementById("btn_Send").innerHTML = "Send";
+			WaitingForAPI = false;
+		}else{
+			console.log("Error! Failure in calling Azure Function.");
+			console.log(URI);
+			console.log(JSON.stringify(params));
+		}
+	}
+	//waitForAPI(10000);
+	chatResponse(request.response);
+	return request.response;
+}
+
+async function postData(url = "", data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    mode: "cors", // no-cors, *cors, same-origin
+    //cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: "same-origin",//"same-origin", // include, *same-origin, omit
+    /*headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },*/
+    //redirect: "follow", // manual, *follow, error
+    //referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+
+/*
+Make the chat window scroll to the bottom.
+*/
+function ScrollToBottom(){
+	myDiv = document.getElementById("ChatScroll");
+	myDiv.scrollTop = myDiv.scrollHeight;
+	myDiv = document.getElementById("LogScroll");
+	myDiv.scrollTop = myDiv.scrollHeight;
+}
+</script>

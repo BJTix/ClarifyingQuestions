@@ -1,0 +1,83 @@
+<html>
+	<title>
+		Clarifying Questions Pilot Debug
+	</title>
+	<Body>
+	<div style="height:400px;width:600px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;" id="ChatScroll">
+	</div>
+	</br>
+	<textarea id="prompt" name="txt_prompt" rows="3" cols="50" style="font:16px/26px Georgia, Garamond, Serif"></textarea>
+	<button type="button" onclick="myFunction()" id="btn_Send">Send</button>
+	
+	</body>
+</html>
+<script>
+function myFunction() {
+  addLabelFromPrompt();
+  //addResponse("Please wait...");
+  var params = {"name":"Bernadette"}
+  APICall(params);
+  document.getElementById("prompt").value = "";
+}
+
+function getPrompt(){
+	return document.getElementById("prompt").value;
+}
+function addLabelFromPrompt(){
+	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#FFFFFF\">" + getPrompt() + "</div>";
+	document.getElementById("ChatScroll").innerHTML= html;
+	ScrollToBottom();
+	document.getElementById("btn_Send").disabled = 1;
+	document.getElementById("btn_Send").innerHTML = "Please wait...";
+}
+function addResponse(response){
+	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#DDEEFF\">" + response + "</div>";
+	document.getElementById("ChatScroll").innerHTML= html;
+	ScrollToBottom();
+}
+function APICall(params){
+	const request = new XMLHttpRequest();
+	FunctionName = "BasicOpenAI"
+	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
+	request.open("POST", "https://tixclarifyingquestions.azurewebsites.net/api/BasicOpenAI?");
+	request.send(JSON.stringify(params));
+	request.onload = ()=>{
+		if(request.status == 200) {
+			console.log(request.response);
+			addResponse(request.response);
+			document.getElementById("btn_Send").disabled = 0;
+			document.getElementById("btn_Send").innerHTML = "Send";
+		}else{
+			console.log("Error! Failure in calling Azure Function.");
+		}
+	}
+	return request.response;
+}
+
+async function postData(url = "", data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    mode: "cors", // no-cors, *cors, same-origin
+    //cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: "omit",//"same-origin", // include, *same-origin, omit
+    /*headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },*/
+    //redirect: "follow", // manual, *follow, error
+    //referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+
+/*
+Make the chat window scroll to the bottom.
+*/
+function ScrollToBottom(){
+	myDiv = document.getElementById("ChatScroll")
+	myDiv.scrollTop = myDiv.scrollHeight;
+}
+</script>
