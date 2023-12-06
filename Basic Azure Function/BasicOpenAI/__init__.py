@@ -5,16 +5,13 @@ import azure.functions as func
 #from datetime import datetime
 import pyodbc
 #from azure import identity
+import os
 
 #q: How can I call this function with a name parameter?
 #A: https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-http-webhook-trigger?tabs=python#customize-the-http-endpoint
 
 #q: Why does this azure function fail to connect to my SQL database?
 #A: https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-python#azure-sql-database
-#OK, let's have some fun... keep this key a secret for me, K?
-SecretKey = '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'
-#Now let's just import the positronic network... 
-openai.api_key = SecretKey
 #print(openai.VERSION)
 
 def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpResponse:
@@ -44,6 +41,10 @@ def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpRe
 
 #Get a response from OpenAI
 def CallOpenAI(prompt):
+    #OK, let's have some fun... keep this key a secret for me, K?
+    SecretKey = os.getenv('OpenAIKey')
+    #Now let's just import the positronic network... 
+    openai.api_key = SecretKey
     client = openai.OpenAI(api_key =  SecretKey)
     response = client.chat.completions.create(
         model = "gpt-3.5-turbo"
@@ -118,7 +119,7 @@ def get_conn():
     server = 'tixclarifyingquestions.database.windows.net'
     database = 'ClarifyingQuestionsData'
     username = 'ClarifyingQuestions'
-    password = 'hEkjqGakb4mY2f3'   
+    password = os.getenv('SQLPassword')   
     driver= '{ODBC Driver 18 for SQL Server}'
     finaloutput = "\n"
       

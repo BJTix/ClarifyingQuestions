@@ -2,9 +2,8 @@ import logging
 import openai
 import azure.functions as func
 import pyodbc
+import os
 
-SecretKey = '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'
-openai.api_key = SecretKey
 
 def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
@@ -23,6 +22,8 @@ def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpRe
 
 #Get a response from OpenAI
 def CallOpenAI(prompt,SessionID):
+    SecretKey = os.getenv('OpenAIKey')
+    openai.api_key = SecretKey
     SavePrompt(prompt,SessionID)
     client = openai.OpenAI(api_key =  SecretKey)
     response = client.chat.completions.create(
@@ -81,7 +82,7 @@ def get_conn():
     server = 'tixclarifyingquestions.database.windows.net'
     database = 'ClarifyingQuestionsData'
     username = 'ClarifyingQuestions'
-    password = 'hEkjqGakb4mY2f3'   
+    password = os.getenv('SQLPassword') 
     driver= '{ODBC Driver 18 for SQL Server}'
     connection_string = 'DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password
     conn = pyodbc.connect(connection_string)

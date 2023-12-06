@@ -1,6 +1,7 @@
 import logging
 import pyodbc
 import azure.functions as func
+import os
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -35,7 +36,7 @@ def get_conn():
     server = 'tixclarifyingquestions.database.windows.net'
     database = 'ClarifyingQuestionsData'
     username = 'ClarifyingQuestions'
-    password = 'hEkjqGakb4mY2f3'   
+    password = os.getenv('SQLPassword')
     driver= '{ODBC Driver 18 for SQL Server}'
     connection_string = 'DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password
     conn = pyodbc.connect(connection_string)
