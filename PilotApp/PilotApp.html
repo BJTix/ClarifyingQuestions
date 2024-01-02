@@ -138,28 +138,7 @@
 			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
 			<button type="button" onclick="btnQA()" id="btnQA">Continue</button>
 		</div>
-		<div id="ChatDiv">
-			<table>
-				<tr>
-					<td>
-						<h2>Display View</h2>
-						<div style="height:400px;width:600px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ChatScroll">
-						</div>
-					</td>
-					<td>
-						<h2>API Log</h2>
-						<div style="height:400px;width:600px;border:1px solid #ccc;font:14px console, Garamond, Serif;overflow:auto;" id="LogScroll">
-						</div>
-					</td>
-				
-				</tr>
-			</table>
-			</br>
-			<strong>Enter prompts and responses here:</strong></br>
-			<textarea id="prompt2" name="txt_prompt2" rows="5" cols="100" style="font:16px/26px Georgia, Garamond, Serif"></textarea>
-			<button type="button" onclick="btnPress()" id="btn_Send">Send</button>
-			<label id="sessionid"></label>
-		</div>
+		
 	</div>
 	</body>
 	<footer>
@@ -194,22 +173,48 @@ getSessionID();
 
 //define variables and functions for progressing through the wizard
 var step = 0;
-var ChatDiv = document.getElementById("ChatDiv");
 var ConsentDiv = document.getElementById("ConsentDiv");
 var DemographicsDiv = document.getElementById("DemographicsDiv");
 var PromptDiv = document.getElementById("PromptDiv");
 var PleaseWaitDiv = document.getElementById("PleaseWaitDiv");
 var QADiv = document.getElementById("QADiv");
 
+//Determine which output will be shown first by a coin flip.
+var showQAFirst = false;
+if(Math.random() < 0.5) showQAFirst = true;
+
+/*
+This function is used to progress through the wizard.
+*/
 function nextStep(){
 	step++;
 	//reveal just one div based on the step. Hide the rest.
-	ConsentDiv.hidden = (step != 1);
-	DemographicsDiv.hidden = (step != 2);
-	PromptDiv.hidden = (step != 3);
-	PleaseWaitDiv.hidden = (step != 4 && step != 6); //the please wait screen is shown twice.
-	QADiv.hidden = (step != 5);
-	ChatDiv.hidden = 1;
+	ConsentDiv.hidden = true;
+	DemographicsDiv.hidden = true;
+	PromptDiv.hidden = true;
+	PleaseWaitDiv.hidden = true;
+	QADiv.hidden = true;
+	
+	switch(step){
+		case 1:
+			ConsentDiv.hidden = false;
+			break;
+		case 2:
+			DemographicsDiv.hidden = false;
+			break;
+		case 3:
+			PromptDiv.hidden = false;
+			break;
+		case 4:
+			PleaseWaitDiv.hidden = false; //the please wait screen is shown twice.
+			break;
+		case 5:
+			QADiv.hidden = false;
+			break;
+		case 6:
+			PleaseWaitDiv.hidden = false; //the please wait screen is shown twice.
+			break;
+	}		
 }
 //Call the nextStep function once to initialize:
 nextStep();
@@ -304,7 +309,7 @@ async function btnQA(){
 	nextStep();
 	
 }
-
+/*
 //This function is called when the "send" button is clicked.
 async function btnPress() {
 	promptNum ++;
@@ -354,48 +359,13 @@ async function btnPress() {
 	document.getElementById("btn_Send").disabled = 0;
 	document.getElementById("btn_Send").innerHTML = "Send";
 }
-
-//Get the prompt that was entered into the user prompt text box
-function getPrompt(){
-	return document.getElementById("prompt").value;
-}
-
-//Add a user prompt to the chat window
-//This also disables the send button
-function addLabelFromPrompt(){
-	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#FFFFFF\">" + getPrompt().replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
-	document.getElementById("ChatScroll").innerHTML= html;
-	ScrollToBottom();
-	document.getElementById("btn_Send").disabled = 1;
-	document.getElementById("btn_Send").innerHTML = "Please wait...";
-}
-
-//Add an AI response to the chat window
-function chatResponse(response){
-	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#DDEEFF\">" + response.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
-	document.getElementById("ChatScroll").innerHTML= html;
-	ScrollToBottom();
-}
-//Add an AI response to the log window
-function logResponse(response){
-	html = document.getElementById("LogScroll").innerHTML + "<div style=\"background-color:#FFEEDD\"><strong>[recieved]</strong>" + response.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
-	document.getElementById("LogScroll").innerHTML= html;
-	ScrollToBottom();
-}
-//Add a user prompt to the log window.
-function logPrompt(prompt){
-	console.log(prompt);
-	html = document.getElementById("LogScroll").innerHTML + "<div style=\"background-color:#EEEEEE\"><strong>[sent]</strong>" + prompt.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
-	document.getElementById("LogScroll").innerHTML= html;
-	ScrollToBottom();
-}
+*/
 //Make a call to the Azure Function that I have set up ahead of time.
 async function getSessionID(){
 	WaitingForAPI = true;
 	FunctionName = "GetNewSessionID"
 	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
 	response = await postData(URI, {})
-	logResponse(response); 
 	sessionid = response;
 }
 
@@ -404,11 +374,9 @@ async function OpenAIPrompt(prompt){
 	console.log(sessionid);
 	WaitingForAPI = true;
 	var params = {"prompt": prompt, "sessionid": sessionid};
-	logPrompt(prompt);	
 	FunctionName = "OpenAIPromptResponse"
 	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
 	response = await postData(URI, params)
-	logResponse(response); 
 	return response;
 }
 
@@ -426,11 +394,4 @@ async function postData(url = "", data = {}) {
   return answer; 
 }
 
-//Make the chat window scroll to the bottom.
-function ScrollToBottom(){
-	myDiv = document.getElementById("ChatScroll");
-	myDiv.scrollTop = myDiv.scrollHeight;
-	myDiv = document.getElementById("LogScroll");
-	myDiv.scrollTop = myDiv.scrollHeight;
-}
 </script>
