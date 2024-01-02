@@ -16,6 +16,9 @@
 	li {
 		margin: 4px;
 	}
+	range, input[type="range"]{
+		accent-color: #024731
+	}
 	
 	</style>
 	</head>
@@ -71,7 +74,8 @@
 		
 		<div id="DemographicsDiv">
 			<h2>Part 1 of 6: Demographics</h2>
-			Please answer the following demographic questions about yourself.
+			<h3>Welcome!</h3>
+			Thank you for taking the time to participate in this study. In this study, you will be using AI to create a short document of your choosing. Completion of the study may take as little as a few minutes or as much as half an hour, depending on the complexity of the document you are trying to create. Please <strong>DO NOT</strong> press the back button on your broswer or refresh the page, as this will reset the survey and you will not be able to recover your work in progress. When you are ready to begin, please answer the following demographic questions about yourself and then click the "continue" button below.
 			<form action="javascript:btnDemographicsContinue()">
 				<ul>
 					<li><label for="Age">Age:</label><input id="Age" name="Age" type="number" min="18" max="100"/></li>
@@ -131,12 +135,133 @@
 			To give you the best results, the AI would like to ask you a few questions about the document you need. Please provide your answers and then click "continue."
 			<h3>Questions:</h3>
 			<label for="txtA1" id="lblQ1"></label><br/>
-			<textarea id="txtA1" name="txtA1" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
+			<textarea id="txtA1" name="txtA1" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
 			<label for="txtA2" id="lblQ2"></label><br/>
-			<textarea id="txtA2" name="txtA2" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
+			<textarea id="txtA2" name="txtA2" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
 			<label for="txtA3" id="lblQ3"></label><br/>
-			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
+			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
 			<button type="button" onclick="btnQA()" id="btnQA">Continue</button>
+		</div>
+		<div id="FirstResultDiv">
+			<h2>Part 4 of 6: Rating Doument #1</h2>
+			Thank you for your thoughtful answers! The AI has considered your prompt and your responses to its questions, and has generated two different possible outputs for you. The first document is shown below, please read through the document carefully andand answer the questions that follow. An alternative document will be shown on the next screen.<br/><br/>
+			<div id="FirstResultText" style="position:relative;left:10%;width:80%;height:50%;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll">
+			</div>
+			<h3>Questions:</h3>
+			<hr/>
+			How close is this document to what you hoped for when you made your initial request?<br/>
+			<select name="R1Q1" id="R1Q1">
+				<option value="0"></option>
+				<option value="5">Very close to what I was hoping for.</option>
+				<option value="4">Somewhat close to what I was hoping for.</option>
+				<option value="3">A little bit like what I was hoping for.</option>
+				<option value="2">Not very close to what I was hoping for.</option>
+				<option value="1">Not at all what I wanted.</option>
+			</select>
+			<hr/>
+			How useful would this document be to you?<br/>
+			<select name="R1Q2" id="R1Q2">
+				<option value="0"></option>
+				<option value="5">I could use this document as-is.</option>
+				<option value="4">I could use this document with minimal modification.</option>
+				<option value="3">I could use this document with substantial modification.</option>
+				<option value="2">This document could be used as a general starting point but requires major revisions to be usable.</option>
+				<option value="1">This document is not usable at all.</option>
+			</select>
+			<hr/>
+			How would you rate the overall quality of this document?<br/>
+			<select name="R1Q3" id="R1Q3">
+				<option value="0"></option>
+				<option value="5">Excellent quality.</option>
+				<option value="4">Above average quality.</option>
+				<option value="3">Average quality.</option>
+				<option value="2">Below average quality.</option>
+				<option value="1">Poor quality.</option>
+			</select><br/>
+			<button type="button" onclick="nextStep()" id="btnR1">Continue</button>
+		</div>
+		<div id="SecondResultDiv">
+			<h2>Part 5 of 6: Rating Doument #2</h2>
+			This is the second document produced by the AI. Although it may look similar to the first one, there are differences between this document and the one that was shown on the previous screen. Please read through the document carefully andand answer the questions that follow.<br/><br/>
+			<div id="SecondResultText" style="position:relative;left:10%;width:80%;height:50%;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll">
+			</div>
+			<h3>Questions:</h3>
+			<hr/>
+			How close is this document to what you hoped for when you made your initial request?<br/>
+			<select name="R2Q1" id="R2Q1">
+				<option value="0"></option>
+				<option value="5">Very close to what I was hoping for.</option>
+				<option value="4">Somewhat close to what I was hoping for.</option>
+				<option value="3">A little bit like what I was hoping for.</option>
+				<option value="2">Not very close to what I was hoping for.</option>
+				<option value="1">Not at all what I wanted.</option>
+			</select>
+			<hr/>
+			How useful would this document be to you?<br/>
+			<select name="R2Q2" id="R2Q2">
+				<option value="0"></option>
+				<option value="5">I could use this document as-is.</option>
+				<option value="4">I could use this document with minimal modification.</option>
+				<option value="3">I could use this document with substantial modification.</option>
+				<option value="2">This document could be used as a general starting point but requires major revisions to be usable.</option>
+				<option value="1">This document is not usable at all.</option>
+			</select>
+			<hr/>
+			How would you rate the overall quality of this document?<br/>
+			<select name="R3Q3" id="R3Q3">
+				<option value="0"></option>
+				<option value="5">Excellent quality.</option>
+				<option value="4">Above average quality.</option>
+				<option value="3">Average quality.</option>
+				<option value="2">Below average quality.</option>
+				<option value="1">Poor quality.</option>
+			</select><br/>
+			<button type="button" onclick="nextStep()" id="btnR2">Continue</button>
+		</div>
+		<div id="ExitSurveyDiv">
+			<h2>Part 6 of 6: Exit Survey</h2>
+			Thank you for rating the AI’s responses. For the final step in this study, please rate the following statements on a scale of “Strongly Agree” to “Strongly Disagree”.
+			<hr/>
+			It was annoying to have to answer questions even though I had already explained what I wanted the AI to do.
+			<br/>Strongly Disagree <input type="range" id="EQ1" min="0" max="5" /> Strongly Agree
+			<hr/>
+			I felt like the AI was more engaged with my problem because it asked follow-up questions.
+			<br/>Strongly Disagree <input type="range" id="EQ2" min="0" max="5" /> Strongly Agree
+			<hr/>
+			I would be willing to answer follow-up questions from an AI if answering questions led to better results.
+			<br/>Strongly Disagree <input type="range" id="EQ3" min="0" max="5" /> Strongly Agree
+			<hr/>
+			I liked that the AI showed me two options to pick between, instead of only picking the option it thought was best.
+			<br/>Strongly Disagree <input type="range" id="EQ4" min="0" max="5" /> Strongly Agree
+			<hr/><br/>
+			<button type="button" onclick="nextStep()" id="btnExitFinish">Finish!</button>
+		</div>
+		<div id="GoodbyeDiv">
+			<h2>Thank You!</h2>
+			You have completed the experiment! Thank you for your participation. If you have any further questions, please contact Bernadette Tix at bjavery@hawaii.edu. Please close your browser to exit. 
+			<br/><br/>
+			If you would like to keep a copy of the documents you created, you can copy them below. Once you exit the browser or navigate away from this page, you will no longer be able to access these documents.
+			<br/><br/>
+			<table>
+			<tr>
+				<td>
+				<h3>Document #1</h3>
+				<div id="FirstResultTextExit" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll"></div>
+				<br/>
+					<button type="button" onclick="copyDoc1()" id="btnExitFinish">Copy to Clipbord</button>
+				</td><td>
+				<h3>Document #2</h3>
+				<div id="SecondResultTextExit" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll"></div>
+				<br/>
+					<button type="button" onclick="copyDoc2()" id="btnExitFinish">Copy to Clipbord</button>
+				</td>
+			</tr>
+			</table>
+		</div>
+		<div id="ErrorDiv">
+			<h2>Processing Error!</h2>
+			An error has occurred! This can happen if the AI receives unexpected input it doesn't know how to handle. Click the button below to try to recover.
+			<button id="btnError" onclinck="errorRecovery()">Recover</button>
 		</div>
 		
 	</div>
@@ -178,10 +303,33 @@ var DemographicsDiv = document.getElementById("DemographicsDiv");
 var PromptDiv = document.getElementById("PromptDiv");
 var PleaseWaitDiv = document.getElementById("PleaseWaitDiv");
 var QADiv = document.getElementById("QADiv");
+var FirstResultDiv = document.getElementById("FirstResultDiv");
+var SecondResultDiv = document.getElementById("SecondResultDiv");
+var FirstResultText = document.getElementById("FirstResultText");
+var SecondResultText = document.getElementById("SecondResultText");
+var FirstResultTextExit = document.getElementById("FirstResultTextExit");
+var SecondResultTextExit = document.getElementById("SecondResultTextExit");
+var ExitSurveyDiv = document.getElementById("ExitSurveyDiv");
+var GoodbyeDiv = document.getElementById("GoodbyeDiv");
+var ErrorDiv = document.getElementById("ErrorDiv");
 
 //Determine which output will be shown first by a coin flip.
 var showQAFirst = false;
 if(Math.random() < 0.5) showQAFirst = true;
+
+/*Hide all the divs / steps.*/
+function hideAll(){
+	ConsentDiv.hidden = true;
+	DemographicsDiv.hidden = true;
+	PromptDiv.hidden = true;
+	PleaseWaitDiv.hidden = true;
+	QADiv.hidden = true;
+	FirstResultDiv.hidden = true;
+	SecondResultDiv.hidden= true;
+	ExitSurveyDiv.hidden = true;
+	GoodbyeDiv.hidden = true;
+	ErrorDiv.hidden = true;
+}
 
 /*
 This function is used to progress through the wizard.
@@ -189,31 +337,19 @@ This function is used to progress through the wizard.
 function nextStep(){
 	step++;
 	//reveal just one div based on the step. Hide the rest.
-	ConsentDiv.hidden = true;
-	DemographicsDiv.hidden = true;
-	PromptDiv.hidden = true;
-	PleaseWaitDiv.hidden = true;
-	QADiv.hidden = true;
-	
+	hideAll();
+		
 	switch(step){
-		case 1:
-			ConsentDiv.hidden = false;
-			break;
-		case 2:
-			DemographicsDiv.hidden = false;
-			break;
-		case 3:
-			PromptDiv.hidden = false;
-			break;
-		case 4:
-			PleaseWaitDiv.hidden = false; //the please wait screen is shown twice.
-			break;
-		case 5:
-			QADiv.hidden = false;
-			break;
-		case 6:
-			PleaseWaitDiv.hidden = false; //the please wait screen is shown twice.
-			break;
+		case 1: ConsentDiv.hidden = false; break;
+		case 2: DemographicsDiv.hidden = false; break;
+		case 3: PromptDiv.hidden = false; break;
+		case 4: PleaseWaitDiv.hidden = false; break; //the please wait screen is shown twice.
+		case 5: QADiv.hidden = false; break;
+		case 6: PleaseWaitDiv.hidden = false; break; //the please wait screen is shown twice.
+		case 7: FirstResultDiv.hidden = false; break;
+		case 8: SecondResultDiv.hidden = false; break;
+		case 9: ExitSurveyDiv.hidden = false; break;
+		default: GoodbyeDiv.hidden = false; break;
 	}		
 }
 //Call the nextStep function once to initialize:
@@ -253,78 +389,20 @@ function btnDemographicsContinue(){
 This function is called when the "Continue" button is pressed on the Prompt screen.
 */
 async function btnPrompt(){
-	var txtPrompt = document.getElementById("prompt");
-	if(txtPrompt.value == null || txtPrompt.value.length < 10){
-		alert("Please enter a prompt describing the document you would like the AI to write for you.");
-	}
-	else{
-		firstPrompt = txtPrompt.value;
-		//Here we're going to go forward two steps. Once for the "please wait" screen and once for the question screen.
-		//This one takes us to a "please wait" screen.
-		nextStep();
-		fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + firstPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list. Include exactly 3 items in the list."
-		var ambiguity = await OpenAIPrompt(fullPrompt);
-		fullPrompt = "Consider the following request:\nuser:\"" + firstPrompt + "\" \nand the following identified points of ambiguity: \n\"" + ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified. Format your response as a numbered list of exactly 3 questions."
-		questions = await OpenAIPrompt(fullPrompt);
-		//Now we need to split the questions up into multiple questions:
-		intro = questions.substring(0, questions.indexOf("\n1") + 1);
-		endIndex = questions.indexOf("\n", questions.indexOf("\n3") + 1);
-		if (endIndex == -1) endIndex = questions.length;
-		Q1 = questions.substring(questions.indexOf("\n1") + 1, questions.indexOf("\n2", questions.indexOf("\n1")));
-		Q2 = questions.substring(questions.indexOf("\n2") + 1, questions.indexOf("\n3", questions.indexOf("\n2")));
-		Q3 = questions.substring(questions.indexOf("\n3") + 1, endIndex);
-		//Now that the processing is done, we're ready for the Q/A screen:
-		nextStep();
-		//Set up the question prompts:
-		document.getElementById("lblQ1").innerHTML = Q1;
-		document.getElementById("lblQ2").innerHTML = Q2;
-		document.getElementById("lblQ3").innerHTML = Q3;
-	}
-}
-/*
-This function is called when the "Continue" button is pressed on the Q/A screen.
-*/
-async function btnQA(){
-	//Get the answers off the page:
-	A1 = document.getElementById("txtA1").value;
-	A2 = document.getElementById("txtA2").value;
-	A3 = document.getElementById("txtA3").value;
-	//Perform validation:
-	if(A1 == null || A1.length == 0 || 
-		A2 == null || A2.length == 0 ||
-		A3 == null || A3.length == 0){
-		alert("Please answer all questions before continuing!");
-		return; //End here if validation fails.
-	}
-	//Continue on if validation was successful:
-	//Move on to another "Please Wait" screen while processing.
-	nextStep();
-	//Submit these answers to the AI:
-	userAnswers = "1. " + A1 + "\n2. " + A2 + "\n3. " + A3;
-	fullPrompt = "Consider the following exchange. Attempt to create the document requested by the user, considering the answers they gave when asked for details.\nuser: \"" + firstPrompt + "\"\nassistant: \"" + intro + "\n" + Q1 + "\"\nuser: \"" + A1 + "\"\nassistant: \"" + Q2 + "\"\nuser: \"" + A2 + "\"\nassistant: \"" + Q3 + "\"\nuser: \"" + A3 + "\"";
-	//We need both the final QA doc as well as a baseline to compare to:
-	finalQADoc = await OpenAIPrompt(fullPrompt);
-	baselineDoc = await OpenAIPrompt(firstPrompt);
-	//Once processing is complete, move on to the next screen:
-	nextStep();
-	
-}
-/*
-//This function is called when the "send" button is clicked.
-async function btnPress() {
-	promptNum ++;
-	addLabelFromPrompt();
-	var userPrompt = document.getElementById("prompt").value;
-	document.getElementById("prompt").value = "";
-	var fullPrompt = "";
-	
-	//Check the step we are on, and modify the prompt accordingly
-	switch(promptNum){
-		case 1:
-			firstPrompt = userPrompt;
-			fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + userPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list. Include exactly 3 items in the list."
+	try
+	{	
+		var txtPrompt = document.getElementById("prompt");
+		if(txtPrompt.value == null || txtPrompt.value.length < 10){
+			alert("Please enter a prompt describing the document you would like the AI to write for you.");
+		}
+		else{
+			firstPrompt = txtPrompt.value;
+			//Here we're going to go forward two steps. Once for the "please wait" screen and once for the question screen.
+			//This one takes us to a "please wait" screen.
+			nextStep();
+			fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + firstPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list. Include exactly 3 items in the list."
 			var ambiguity = await OpenAIPrompt(fullPrompt);
-			fullPrompt = "Consider the following request:\nuser:\"" + userPrompt + "\" \nand the following identified points of ambiguity: \n\"" + ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified. Format your response as a numbered list of exactly 3 questions."
+			fullPrompt = "Consider the following request:\nuser:\"" + firstPrompt + "\" \nand the following identified points of ambiguity: \n\"" + ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified. Format your response as a numbered list of exactly 3 questions."
 			questions = await OpenAIPrompt(fullPrompt);
 			//Now we need to split the questions up into multiple questions:
 			intro = questions.substring(0, questions.indexOf("\n1") + 1);
@@ -333,33 +411,101 @@ async function btnPress() {
 			Q1 = questions.substring(questions.indexOf("\n1") + 1, questions.indexOf("\n2", questions.indexOf("\n1")));
 			Q2 = questions.substring(questions.indexOf("\n2") + 1, questions.indexOf("\n3", questions.indexOf("\n2")));
 			Q3 = questions.substring(questions.indexOf("\n3") + 1, endIndex);
-			//chatResponse(questions);
-			if(intro.length > 0) chatResponse(intro);
-			chatResponse(Q1);
-			break;
-		case 2:
-			A1 = userPrompt;
-			chatResponse(Q2);
-			break;
-		case 3:
-			A2 = userPrompt;
-			chatResponse(Q3);
-			break;
-		case 4:
-			A3 = userPrompt;
-			userAnswers = "1. " + A1 + "\n2. " + A2 + "\n3. " + A3;
-			fullPrompt = "Consider the following exchange. Attempt to create the document requested by the user, considering the answers they gave when asked for details.\nuser: \"" + firstPrompt + "\"\nassistant: \"" + intro + "\n" + Q1 + "\"\nuser: \"" + A1 + "\"\nassistant: \"" + Q2 + "\"\nuser: \"" + A2 + "\"\nassistant: \"" + Q3 + "\"\nuser: \"" + A3 + "\"";
-			finalQADoc = await OpenAIPrompt(fullPrompt);
-			chatResponse(finalQADoc);			
-			break;
-		case 5:
-			chatResponse("Interaction Complete. Refresh the page to restart.");			
-			break;
+			//Now that the processing is done, we're ready for the Q/A screen:
+			nextStep();
+			//Set up the question prompts:
+			document.getElementById("lblQ1").innerHTML = Q1;
+			document.getElementById("lblQ2").innerHTML = Q2;
+			document.getElementById("lblQ3").innerHTML = Q3;
+		}
 	}
-	document.getElementById("btn_Send").disabled = 0;
-	document.getElementById("btn_Send").innerHTML = "Send";
+	catch{
+		processingError();
+	}
 }
+/*
+This function is called when the "Continue" button is pressed on the Q/A screen.
 */
+async function btnQA(){
+	try{
+		//Get the answers off the page:
+		A1 = document.getElementById("txtA1").value;
+		A2 = document.getElementById("txtA2").value;
+		A3 = document.getElementById("txtA3").value;
+		//Perform validation:
+		if(A1 == null || A1.length == 0 || 
+			A2 == null || A2.length == 0 ||
+			A3 == null || A3.length == 0){
+			alert("Please answer all questions before continuing!");
+			return; //End here if validation fails.
+		}
+		//Continue on if validation was successful:
+		//Move on to another "Please Wait" screen while processing.
+		nextStep();
+		//Submit these answers to the AI:
+		userAnswers = "1. " + A1 + "\n2. " + A2 + "\n3. " + A3;
+		fullPrompt = "Consider the following exchange. Attempt to create the document requested by the user, considering the answers they gave when asked for details.\nuser: \"" + firstPrompt + "\"\nassistant: \"" + intro + "\n" + Q1 + "\"\nuser: \"" + A1 + "\"\nassistant: \"" + Q2 + "\"\nuser: \"" + A2 + "\"\nassistant: \"" + Q3 + "\"\nuser: \"" + A3 + "\"";
+		//We need both the final QA doc as well as a baseline to compare to:
+		finalQADoc = await OpenAIPrompt(fullPrompt);
+		baselineDoc = await OpenAIPrompt(firstPrompt);
+		var finalQADocHTML = finalQADoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
+		var baselineDocHTML = baselineDoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
+		if(showQAFirst) {
+			FirstResultText.innerHTML = finalQADocHTML;
+			SecondResultText.innerHTML = baselineDocHTML;
+			
+			FirstResultTextExit.innerHTML = finalQADocHTML;
+			SecondResultTextExit.innerHTML = baselineDocHTML;
+		}
+		else {
+			FirstResultText.innerHTML = baselineDocHTML;
+			SecondResultText.innerHTML = finalQADocHTML;
+			
+			FirstResultTextExit.innerHTML = baselineDocHTML;
+			SecondResultTextExit.innerHTML = finalQADocHTML;
+		}
+		//Once processing is complete, move on to the next screen:
+		nextStep();
+	}
+	catch{
+		processingError();
+	}
+}
+
+
+/*
+This function shows the processing error page. 
+*/
+function processingError(){
+	hideAll();
+	ErrorDiv.hidden = true;
+}
+/*
+This function coppies the first document to the clippboard. 
+*/
+function copyDoc1(){
+	if(showQAFirst) navigator.clipboard.writeText(finalQADoc);
+	else navigator.clipboard.writeText(baselineDoc);
+	alert("Document #1 has been coppied to your clipboard. You are free to keep or use this document as you wish.");
+}
+
+/*
+This function coppies the second document to the clippboard. 
+*/
+function copyDoc2(){
+	if(showQAFirst) navigator.clipboard.writeText(baselineDoc);
+	else navigator.clipboard.writeText(finalQADoc);
+	alert("Document #2 has been coppied to your clipboard. You are free to keep or use this document as you wish.");
+}
+
+/*
+An error recovery function: attempt to reload the most recent step.
+*/
+function errorRecovery(){
+	step --;
+	nextStep();
+}
+
 //Make a call to the Azure Function that I have set up ahead of time.
 async function getSessionID(){
 	WaitingForAPI = true;
