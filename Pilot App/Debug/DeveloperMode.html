@@ -1,0 +1,178 @@
+<html>
+	<title>
+		Clarifying Questions Developer Mode
+	</title>
+	<head>
+	<h1>Prompt Response With Clarifying Questions -- Manual Context</h1>
+	<hr/>
+	</head>
+	<Body>
+	<table>
+		<tr>
+			<td>
+				<h2>Display View</h2>
+				<div style="height:400px;width:600px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ChatScroll">
+				</div>
+			</td>
+			<td>
+				<h2>API Log</h2>
+				<div style="height:400px;width:600px;border:1px solid #ccc;font:14px console, Garamond, Serif;overflow:auto;" id="LogScroll">
+				</div>
+			</td>
+		
+		</tr>
+	</table>
+	</br>
+	<strong>Enter prompts and responses here:</strong></br>
+	<textarea id="prompt" name="txt_prompt" rows="5" cols="100" style="font:16px/26px Georgia, Garamond, Serif"></textarea>
+	<button type="button" onclick="btnPress()" id="btn_Send">Send</button>
+	<label id="sessionid"></label>
+	
+	</body>
+</html>
+<script>
+var promptNum = 0;
+var questions = "";
+var firstPrompt = "";
+var userAnswers = "";
+var finalQADoc = "";
+var sessionid = 0;
+var intro = "";
+var Q1 = "";
+var Q2 = "";
+var Q3 = "";
+var A1 = "";
+var A2 = "";
+var A3 = "";
+var endIndex = -1;
+getSessionID();
+
+//This function is called when the "send" button is clicked.
+async function btnPress() {
+	promptNum ++;
+	addLabelFromPrompt();
+	var userPrompt = document.getElementById("prompt").value;
+	document.getElementById("prompt").value = "";
+	var fullPrompt = "";
+	
+	//Check the step we are on, and modify the prompt accordingly
+	switch(promptNum){
+		case 1:
+			firstPrompt = userPrompt;
+			fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + userPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list. Include exactly 3 items in the list."
+			var ambiguity = await APICall(fullPrompt);
+			fullPrompt = "Consider the following request:\nuser:\"" + userPrompt + "\" \nand the following identified points of ambiguity: \n\"" + ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified. Format your response as a numbered list of exactly 3 questions."
+			questions = await APICall(fullPrompt);
+			//Now we need to split the questions up into multiple questions:
+			intro = questions.substring(0, questions.indexOf("\n1") + 1);
+			endIndex = questions.indexOf("\n", questions.indexOf("\n3") + 1);
+			if (endIndex == -1) endIndex = questions.length;
+			Q1 = questions.substring(questions.indexOf("\n1") + 1, questions.indexOf("\n2", questions.indexOf("\n1")));
+			Q2 = questions.substring(questions.indexOf("\n2") + 1, questions.indexOf("\n3", questions.indexOf("\n2")));
+			Q3 = questions.substring(questions.indexOf("\n3") + 1, endIndex);
+			//chatResponse(questions);
+			if(intro.length > 0) chatResponse(intro);
+			chatResponse(Q1);
+			break;
+		case 2:
+			A1 = userPrompt;
+			chatResponse(Q2);
+			break;
+		case 3:
+			A2 = userPrompt;
+			chatResponse(Q3);
+			break;
+		case 4:
+			A3 = userPrompt;
+			userAnswers = "1. " + A1 + "\n2. " + A2 + "\n3. " + A3;
+			fullPrompt = "Consider the following exchange. Attempt to create the document requested by the user, considering the answers they gave when asked for details.\nuser: \"" + firstPrompt + "\"\nassistant: \"" + intro + "\n" + Q1 + "\"\nuser: \"" + A1 + "\"\nassistant: \"" + Q2 + "\"\nuser: \"" + A2 + "\"\nassistant: \"" + Q3 + "\"\nuser: \"" + A3 + "\"";
+			finalQADoc = await APICall(fullPrompt);
+			chatResponse(finalQADoc);			
+			break;
+		case 5:
+			chatResponse("Interaction Complete. Refresh the page to restart.");			
+			break;
+	}
+	document.getElementById("btn_Send").disabled = 0;
+	document.getElementById("btn_Send").innerHTML = "Send";
+}
+
+//Get the prompt that was entered into the user prompt text box
+function getPrompt(){
+	return document.getElementById("prompt").value;
+}
+
+//Add a user prompt to the chat window
+//This also disables the send button
+function addLabelFromPrompt(){
+	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#FFFFFF\">" + getPrompt().replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
+	document.getElementById("ChatScroll").innerHTML= html;
+	ScrollToBottom();
+	document.getElementById("btn_Send").disabled = 1;
+	document.getElementById("btn_Send").innerHTML = "Please wait...";
+}
+
+//Add an AI response to the chat window
+function chatResponse(response){
+	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#DDEEFF\">" + response.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
+	document.getElementById("ChatScroll").innerHTML= html;
+	ScrollToBottom();
+}
+//Add an AI response to the log window
+function logResponse(response){
+	html = document.getElementById("LogScroll").innerHTML + "<div style=\"background-color:#FFEEDD\"><strong>[recieved]</strong>" + response.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
+	document.getElementById("LogScroll").innerHTML= html;
+	ScrollToBottom();
+}
+//Add a user prompt to the log window.
+function logPrompt(prompt){
+	console.log(prompt);
+	html = document.getElementById("LogScroll").innerHTML + "<div style=\"background-color:#EEEEEE\"><strong>[sent]</strong>" + prompt.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
+	document.getElementById("LogScroll").innerHTML= html;
+	ScrollToBottom();
+}
+//Make a call to the Azure Function that I have set up ahead of time.
+async function getSessionID(){
+	WaitingForAPI = true;
+	FunctionName = "GetNewSessionID"
+	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
+	response = await postData(URI, {})
+	logResponse(response); 
+	sessionid = response;
+}
+
+//Make a call to the OpenAI API Azure Function that I have set up ahead of time.
+async function APICall(prompt){
+	console.log(sessionid);
+	WaitingForAPI = true;
+	var params = {"prompt": prompt, "sessionid": sessionid};
+	logPrompt(prompt);	
+	FunctionName = "OpenAIPromptResponse"
+	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
+	response = await postData(URI, params)
+	logResponse(response); 
+	return response;
+}
+
+//Use Fetch to sent a POST request
+async function postData(url = "", data = {}) {
+  const response = await fetch(url, {
+    method: "POST",
+    mode: "cors", 
+    credentials: "same-origin",
+    body: JSON.stringify(data),
+  });
+  
+  const answer = await response.text();
+  console.log(answer);
+  return answer; 
+}
+
+//Make the chat window scroll to the bottom.
+function ScrollToBottom(){
+	myDiv = document.getElementById("ChatScroll");
+	myDiv.scrollTop = myDiv.scrollHeight;
+	myDiv = document.getElementById("LogScroll");
+	myDiv.scrollTop = myDiv.scrollHeight;
+}
+</script>

@@ -1,0 +1,418 @@
+<html>
+	<title>
+		Clarifying Questions Pilot App
+	</title>
+	<head>
+	<div style="height:10%;vertical-align:middle;align-items:center;">
+		<h1><img src="ConsentLogo.png" style="height:50;width:100;position:relative"/>Clarifying Questions Pilot Study</h1>
+	</div>
+	<hr/>
+	</head>
+	<Body>
+	<div id="bodyDiv" style="top:10%;height:80%;overflow:auto;">
+		<div id="ConsentDiv">
+			<h2>University of Hawai‘i Online Survey Consent Form</h2>
+			Aloha! You are invited to participate in a pilot study conducted by Bernadette Tix from the Department of Information and Computer Science at the University of Hawai‘i. This research project is a part of a PhD Dissertation studying document creation by Artificial Intelligence programs. The purpose of the pilot study is to test whether the format of the proposed study has any major flaws or areas in need of improvement. 
+			</br></br>
+			<div style="position:relative;left:10%;width:80%;height:50%;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll">
+				<h3>What am I being asked to do?</h3>
+				If you participate in this project, you will be asked to fill out a survey, as well as engage in a back-and-forth conversation with an AI chatbot about creating a document for your personal use, such as a letter, memo, or email. For the pilot study, you will join a Zoom call with Bernadette Tix and she will walk you through the process. You will be asked to speak through your thought process out loud and share your screen so your interactions with the AI are visible over the Zoom meeting. Audio and video of the call will be recorded. You are not required to use or turn on a camera for yourself if you do not wish to. 
+				
+				<h3>Taking part in this study is your choice.</h3>
+				Your participation in this project is completely voluntary. You may stop participating at any time. If you stop being in the study, there will be no penalty or loss to you. 
+				
+				<h3>Why is this study being done?</h3>
+				The purpose of this project is to determine whether AI can produce better outputs by asking clarifying questions about what a user needs before creating AI-generated documents. I am seeking adult volunteers to generate documents using an AI, and to give feedback on the output which will allow us to determine whether or not the clarifying questions asked by the AI improved the AI-generated documents. The pilot study will be used to determine whether there are flaws in the study procedures in preparation for launching a larger study that will allow users to anony
+				
+				<h3>What will happen if I decide to take part in this study?</h3>
+				The survey will consist of a brief interaction with an AI chatbot, most likely lasting 5-10 minutes, as well as brief entry and exit surveys. The entry survey will ask for basic demographic information such as your age, gender, and prior experience with AI. When interacting with the AI, you will be asked to think of a document that you would like the AI to write and will answer questions the AI comes up with about your document needs. The exit survey will ask you to rate two different outputs from the AI with questions like, “Would you find this document usable in its current state?” “Is this document close to what you had in mind when you made the request?” and “How would you rate the overall quality of this document?” The survey is accessed on a website to which I will provide you a link. The total length of the survey, including interaction with the AI, is expected to last 15-20 minutes. If you decide to take part in the pilot study, please email Bernadette Tix at bjavery@hawaii.edu to set up a time for a Zoom call.
+				
+				<h3>What are the risks and benefits of taking part in this study?</h3>
+				I believe there is little risk to you for participating in this research project. You may become stressed or uncomfortable answering any of the survey questions. If you do become stressed or uncomfortable, you can skip the question or take a break. You can also stop taking the survey or you can withdraw from the project altogether. 
+				</br></br>
+				There will be no direct benefit to you for participating in this survey. The results of this project may help improve AI’s ability to work in cooperation with humans by giving AI the ability to ask questions and engage in dialog with humans before executing commands.
+				
+				<h3>Confidentiality and Privacy: </h3>
+				I will not ask you for any personal information, such as your name or address. Please do not include any personal information in your survey responses or in your responses to the AI. I will keep all study data secure on a private server. Only my University of Hawai'i advisor and I will have access to the information. Other agencies that have legal permission have the right to review research records. The University of Hawai'i Human Studies Program has the right to review research records for this study.
+				
+				<h3>Future Research Studies: </h3>
+				The data from this study will not be used or distributed for future research studies.  
+			</div>
+			</br>
+			Questions: If you have any questions about this study, please email me at bjavery@hawaii.edu You may also contact my advisor, Dr. Kimberly Binsted, at binsted@hawaii.edu
+			</br></br>
+			You may contact the UH Human Studies Program at 808.956.5007 or uhirb@hawaii.edu to discuss problems, concerns and questions, obtain information, or offer input with an informed individual who is unaffiliated with the specific research protocol. Please visit <a href="http://go.hawaii.edu/jRd">http://go.hawaii.edu/jRd</a> for more information on your rights as a research participant.  
+			</br></br>
+			If you agree to participate in this project, please give electronic consent by checking the box below:
+			</br></br>
+			<form action="javascript:btnConsentSubmit()">
+			  <input type="checkbox" id="chkConsent" name="chkConsent" value="Yes">
+			  <label for="chkConsent"> <strong>YES</strong> I agree to participate in this study.</label><br>
+			  <input type="Submit" value="Continue">
+			</form>
+
+		</div>
+		
+		<div id="DemographicsDiv">
+			<h2>Part 1 of 6: Demographics</h2>
+			Please answer the following demographic questions about yourself.
+			<form action="javascript:btnDemographicsContinue()">
+				<ul>
+					<li><label for="Age">Age:</label><input id="Age" name="Age" type="number" min="18" max="100"/></li>
+					<li> 
+						<label for="Gender">Gender:</label>
+						<select name="Gender" id="Gender">
+							<option value="Blank"></option>
+							<option value="Female">Female</option>
+							<option value="Male">Male</option>
+							<option value="Other">Other / Nonbinary</option>
+						</select>
+					</li>
+					<li> 
+						<label for="Experience">What is your prior experience with generative AI such as ChatGPT, Bard, or similar programs?</label></br>
+						<select name="Experience" id="Experience">
+							<option value="Blank"></option>
+							<option value="Regular">I use generative AI regularly.</option>
+							<option value="Some">I have used generative AI before, but not often.</option>
+							<option value="Never">I have never used generative AI before.</option>
+						</select>
+					</li><li> 
+						<label for="English">Is English your primary spoken language?</label>
+						<select name="English" id="English">
+							<option value="Blank"></option>
+							<option value="Yes">Yes</option>
+							<option value="No">No</option>
+						</select>
+					</li>
+				</ul>
+				<input type="Submit" value="Continue">
+			</form>
+		</div>
+		<div id="PromptDiv">
+			<h2>Part 2 of 6: Describe your Document</h2>
+			On this page, you will be communicating with an AI that is capable of writing short documents such as letters, memos, emails, and short reports. Please think of a document you would like the AI to create for you. This could be a document you actually need, or one that you have just made up for the experiment. Either way, please think in detail about what you would need this document to include. When you are ready, write out what you need in the textbox below.
+			<br/><br/>
+			Example prompts: 
+			<br/><em><ul>
+			<li>“Please write a cover letter for a job working in tech support for a college student with one year of prior tech support experience.” </li>
+			
+			<li>“Write an email to my boss asking them if they can meet next week to discuss a project which is behind schedule.”</li>
+			
+			<li>“I want to reach out to a friend I haven’t spoken to in a while. Give me an outline for a letter to help me figure out what I should say.”</li>
+			</ul></em>
+			<h3>Enter your prompt below:</h3>
+			<textarea id="prompt" name="txt_prompt" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea>
+			<br/>
+			<button type="button" onclick="btnPrompt()" id="btn_Prompt">Continue</button>
+			
+		</div>
+		<div id="PleaseWaitDiv">
+			<h2>Please Wait ... </h2>
+			The AI is working on your request. This may take up to a minute.
+		</div>
+		<div id="QADiv">
+			<h2>Part 3 of 6: Questions and Answers</h2>
+			To give you the best results, the AI would like to ask you a few questions about the document you need. Please provide your answers and then click "continue."
+			<h3>Questions:</h3>
+			<label for="txtA1" id="lblQ1"></label><br/>
+			<textarea id="txtA1" name="txtA1" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
+			<label for="txtA2" id="lblQ2"></label><br/>
+			<textarea id="txtA2" name="txtA2" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
+			<label for="txtA3" id="lblQ3"></label><br/>
+			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
+			<button type="button" onclick="btnQA()" id="btnQA">Continue</button>
+		</div>
+		<div id="ChatDiv">
+			<table>
+				<tr>
+					<td>
+						<h2>Display View</h2>
+						<div style="height:400px;width:600px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ChatScroll">
+						</div>
+					</td>
+					<td>
+						<h2>API Log</h2>
+						<div style="height:400px;width:600px;border:1px solid #ccc;font:14px console, Garamond, Serif;overflow:auto;" id="LogScroll">
+						</div>
+					</td>
+				
+				</tr>
+			</table>
+			</br>
+			<strong>Enter prompts and responses here:</strong></br>
+			<textarea id="prompt2" name="txt_prompt2" rows="5" cols="100" style="font:16px/26px Georgia, Garamond, Serif"></textarea>
+			<button type="button" onclick="btnPress()" id="btn_Send">Send</button>
+			<label id="sessionid"></label>
+		</div>
+	</div>
+	</body>
+	<footer>
+	<div style="top:90%;height:7%">
+	<hr/>
+		Dr. Kimberly Binsted, Principal Investigator</br>
+		<em>Project Title:</em> Better Results Through Ambiguity Resolution: Large Language Models that Ask Clarifying Questions
+	</div>
+	</footer>
+</html>
+<script>
+//Define variables used for prompt, QA, and responses
+var promptNum = 0;
+var questions = "";
+var firstPrompt = "";
+var userAnswers = "";
+var finalQADoc = "";
+var baselineDoc = "";
+var sessionid = 0;
+var intro = "";
+var Q1 = "";
+var Q2 = "";
+var Q3 = "";
+var A1 = "";
+var A2 = "";
+var A3 = "";
+var endIndex = -1;
+//Get the session ID:
+getSessionID();
+
+//define variables and functions for progressing through the wizard
+var step = 0;
+var ChatDiv = document.getElementById("ChatDiv");
+var ConsentDiv = document.getElementById("ConsentDiv");
+var DemographicsDiv = document.getElementById("DemographicsDiv");
+var PromptDiv = document.getElementById("PromptDiv");
+var PleaseWaitDiv = document.getElementById("PleaseWaitDiv");
+var QADiv = document.getElementById("QADiv");
+
+function nextStep(){
+	step++;
+	//reveal just one div based on the step. Hide the rest.
+	ConsentDiv.hidden = (step != 1);
+	DemographicsDiv.hidden = (step != 2);
+	PromptDiv.hidden = (step != 3);
+	PleaseWaitDiv.hidden = (step != 4 && step != 6); //the please wait screen is shown twice.
+	QADiv.hidden = (step != 5);
+	ChatDiv.hidden = 1;
+}
+//Call the nextStep function once to initialize:
+nextStep();
+/*
+This function is called when the "Submit" button is pressed on the consent.
+*/
+function btnConsentSubmit(){
+	var scrollDiv = document.getElementById("ConsentScroll");
+	//Check if they have clicked "I Agree"
+	var checked = document.getElementById("chkConsent").checked;
+	if(!checked){ 
+		alert('You must agree to participate in this study before proceeding. Please check "YES I agree" before continue.');
+		return;
+	}
+	//check if the user read the whole agreement:
+	else if(scrollDiv.scrollTop == 0){
+		alert("Please read the entire consent before continuing.");
+		return;
+	}
+	//Done with validation, proceed to next step:
+	else{
+		//TODO: Save consent timestamp.
+		nextStep();
+	}	
+}
+
+/*
+This function is called when the "Continue" button is pressed on the Demographics questions.
+*/
+function btnDemographicsContinue(){
+	//TODO: Save answers to DB. 
+	//No validation needed for this one. Blanks are OK.
+	nextStep();
+}
+/*
+This function is called when the "Continue" button is pressed on the Prompt screen.
+*/
+async function btnPrompt(){
+	var txtPrompt = document.getElementById("prompt");
+	if(txtPrompt.value == null || txtPrompt.value.length < 10){
+		alert("Please enter a prompt describing the document you would like the AI to write for you.");
+	}
+	else{
+		firstPrompt = txtPrompt.value;
+		//Here we're going to go forward two steps. Once for the "please wait" screen and once for the question screen.
+		//This one takes us to a "please wait" screen.
+		nextStep();
+		fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + firstPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list. Include exactly 3 items in the list."
+		var ambiguity = await OpenAIPrompt(fullPrompt);
+		fullPrompt = "Consider the following request:\nuser:\"" + firstPrompt + "\" \nand the following identified points of ambiguity: \n\"" + ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified. Format your response as a numbered list of exactly 3 questions."
+		questions = await OpenAIPrompt(fullPrompt);
+		//Now we need to split the questions up into multiple questions:
+		intro = questions.substring(0, questions.indexOf("\n1") + 1);
+		endIndex = questions.indexOf("\n", questions.indexOf("\n3") + 1);
+		if (endIndex == -1) endIndex = questions.length;
+		Q1 = questions.substring(questions.indexOf("\n1") + 1, questions.indexOf("\n2", questions.indexOf("\n1")));
+		Q2 = questions.substring(questions.indexOf("\n2") + 1, questions.indexOf("\n3", questions.indexOf("\n2")));
+		Q3 = questions.substring(questions.indexOf("\n3") + 1, endIndex);
+		//Now that the processing is done, we're ready for the Q/A screen:
+		nextStep();
+		//Set up the question prompts:
+		document.getElementById("lblQ1").innerHTML = Q1;
+		document.getElementById("lblQ2").innerHTML = Q2;
+		document.getElementById("lblQ3").innerHTML = Q3;
+	}
+}
+/*
+This function is called when the "Continue" button is pressed on the Q/A screen.
+*/
+async function btnQA(){
+	//Get the answers off the page:
+	A1 = document.getElementById("txtA1").value;
+	A2 = document.getElementById("txtA2").value;
+	A3 = document.getElementById("txtA3").value;
+	//Perform validation:
+	if(A1 == null || A1.length == 0 || 
+		A2 == null || A2.length == 0 ||
+		A3 == null || A3.length == 0){
+		alert("Please answer all questions before continuing!");
+		return; //End here if validation fails.
+	}
+	//Continue on if validation was successful:
+	//Move on to another "Please Wait" screen while processing.
+	nextStep();
+	//Submit these answers to the AI:
+	userAnswers = "1. " + A1 + "\n2. " + A2 + "\n3. " + A3;
+	fullPrompt = "Consider the following exchange. Attempt to create the document requested by the user, considering the answers they gave when asked for details.\nuser: \"" + firstPrompt + "\"\nassistant: \"" + intro + "\n" + Q1 + "\"\nuser: \"" + A1 + "\"\nassistant: \"" + Q2 + "\"\nuser: \"" + A2 + "\"\nassistant: \"" + Q3 + "\"\nuser: \"" + A3 + "\"";
+	//We need both the final QA doc as well as a baseline to compare to:
+	finalQADoc = await OpenAIPrompt(fullPrompt);
+	baselineDoc = await OpenAIPrompt(firstPrompt);
+	//Once processing is complete, move on to the next screen:
+	nextStep();
+	
+}
+
+//This function is called when the "send" button is clicked.
+async function btnPress() {
+	promptNum ++;
+	addLabelFromPrompt();
+	var userPrompt = document.getElementById("prompt").value;
+	document.getElementById("prompt").value = "";
+	var fullPrompt = "";
+	
+	//Check the step we are on, and modify the prompt accordingly
+	switch(promptNum){
+		case 1:
+			firstPrompt = userPrompt;
+			fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + userPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list. Include exactly 3 items in the list."
+			var ambiguity = await OpenAIPrompt(fullPrompt);
+			fullPrompt = "Consider the following request:\nuser:\"" + userPrompt + "\" \nand the following identified points of ambiguity: \n\"" + ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified. Format your response as a numbered list of exactly 3 questions."
+			questions = await OpenAIPrompt(fullPrompt);
+			//Now we need to split the questions up into multiple questions:
+			intro = questions.substring(0, questions.indexOf("\n1") + 1);
+			endIndex = questions.indexOf("\n", questions.indexOf("\n3") + 1);
+			if (endIndex == -1) endIndex = questions.length;
+			Q1 = questions.substring(questions.indexOf("\n1") + 1, questions.indexOf("\n2", questions.indexOf("\n1")));
+			Q2 = questions.substring(questions.indexOf("\n2") + 1, questions.indexOf("\n3", questions.indexOf("\n2")));
+			Q3 = questions.substring(questions.indexOf("\n3") + 1, endIndex);
+			//chatResponse(questions);
+			if(intro.length > 0) chatResponse(intro);
+			chatResponse(Q1);
+			break;
+		case 2:
+			A1 = userPrompt;
+			chatResponse(Q2);
+			break;
+		case 3:
+			A2 = userPrompt;
+			chatResponse(Q3);
+			break;
+		case 4:
+			A3 = userPrompt;
+			userAnswers = "1. " + A1 + "\n2. " + A2 + "\n3. " + A3;
+			fullPrompt = "Consider the following exchange. Attempt to create the document requested by the user, considering the answers they gave when asked for details.\nuser: \"" + firstPrompt + "\"\nassistant: \"" + intro + "\n" + Q1 + "\"\nuser: \"" + A1 + "\"\nassistant: \"" + Q2 + "\"\nuser: \"" + A2 + "\"\nassistant: \"" + Q3 + "\"\nuser: \"" + A3 + "\"";
+			finalQADoc = await OpenAIPrompt(fullPrompt);
+			chatResponse(finalQADoc);			
+			break;
+		case 5:
+			chatResponse("Interaction Complete. Refresh the page to restart.");			
+			break;
+	}
+	document.getElementById("btn_Send").disabled = 0;
+	document.getElementById("btn_Send").innerHTML = "Send";
+}
+
+//Get the prompt that was entered into the user prompt text box
+function getPrompt(){
+	return document.getElementById("prompt").value;
+}
+
+//Add a user prompt to the chat window
+//This also disables the send button
+function addLabelFromPrompt(){
+	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#FFFFFF\">" + getPrompt().replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
+	document.getElementById("ChatScroll").innerHTML= html;
+	ScrollToBottom();
+	document.getElementById("btn_Send").disabled = 1;
+	document.getElementById("btn_Send").innerHTML = "Please wait...";
+}
+
+//Add an AI response to the chat window
+function chatResponse(response){
+	html = document.getElementById("ChatScroll").innerHTML + "<div style=\"background-color:#DDEEFF\">" + response.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
+	document.getElementById("ChatScroll").innerHTML= html;
+	ScrollToBottom();
+}
+//Add an AI response to the log window
+function logResponse(response){
+	html = document.getElementById("LogScroll").innerHTML + "<div style=\"background-color:#FFEEDD\"><strong>[recieved]</strong>" + response.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
+	document.getElementById("LogScroll").innerHTML= html;
+	ScrollToBottom();
+}
+//Add a user prompt to the log window.
+function logPrompt(prompt){
+	console.log(prompt);
+	html = document.getElementById("LogScroll").innerHTML + "<div style=\"background-color:#EEEEEE\"><strong>[sent]</strong>" + prompt.replace(/(?:\r\n|\r|\n)/g,"</br>") + "</div>";
+	document.getElementById("LogScroll").innerHTML= html;
+	ScrollToBottom();
+}
+//Make a call to the Azure Function that I have set up ahead of time.
+async function getSessionID(){
+	WaitingForAPI = true;
+	FunctionName = "GetNewSessionID"
+	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
+	response = await postData(URI, {})
+	logResponse(response); 
+	sessionid = response;
+}
+
+//Make a call to the OpenAI API Azure Function that I have set up ahead of time.
+async function OpenAIPrompt(prompt){
+	console.log(sessionid);
+	WaitingForAPI = true;
+	var params = {"prompt": prompt, "sessionid": sessionid};
+	logPrompt(prompt);	
+	FunctionName = "OpenAIPromptResponse"
+	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
+	response = await postData(URI, params)
+	logResponse(response); 
+	return response;
+}
+
+//Use Fetch to sent a POST request
+async function postData(url = "", data = {}) {
+  const response = await fetch(url, {
+    method: "POST",
+    mode: "cors", 
+    credentials: "same-origin",
+    body: JSON.stringify(data),
+  });
+  
+  const answer = await response.text();
+  console.log(answer);
+  return answer; 
+}
+
+//Make the chat window scroll to the bottom.
+function ScrollToBottom(){
+	myDiv = document.getElementById("ChatScroll");
+	myDiv.scrollTop = myDiv.scrollHeight;
+	myDiv = document.getElementById("LogScroll");
+	myDiv.scrollTop = myDiv.scrollHeight;
+}
+</script>
