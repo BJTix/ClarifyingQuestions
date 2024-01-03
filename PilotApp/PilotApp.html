@@ -91,17 +91,17 @@
 					<li> 
 						<label for="Experience">What is your prior experience with generative AI such as ChatGPT, Bard, or similar programs?</label></br>
 						<select name="Experience" id="Experience">
-							<option value="Blank"></option>
-							<option value="Regular">I use generative AI regularly.</option>
-							<option value="Some">I have used generative AI before, but not often.</option>
-							<option value="Never">I have never used generative AI before.</option>
+							<option value="-1"></option>
+							<option value="3">I use generative AI regularly.</option>
+							<option value="2">I have used generative AI before, but not often.</option>
+							<option value="1">I have never used generative AI before.</option>
 						</select>
 					</li><li> 
 						<label for="English">Is English your primary spoken language?</label>
 						<select name="English" id="English">
-							<option value="Blank"></option>
-							<option value="Yes">Yes</option>
-							<option value="No">No</option>
+							<option value="_"></option>
+							<option value="Y">Yes</option>
+							<option value="N">No</option>
 						</select>
 					</li>
 				</ul>
@@ -178,7 +178,7 @@
 				<option value="2">Below average quality.</option>
 				<option value="1">Poor quality.</option>
 			</select><br/>
-			<button type="button" onclick="nextStep()" id="btnR1">Continue</button>
+			<button type="button" onclick="recordRatings1()" id="btnR1">Continue</button>
 		</div>
 		<div id="SecondResultDiv">
 			<h2>Part 5 of 6: Rating Doument #2</h2>
@@ -216,7 +216,7 @@
 				<option value="2">Below average quality.</option>
 				<option value="1">Poor quality.</option>
 			</select><br/>
-			<button type="button" onclick="nextStep()" id="btnR2">Continue</button>
+			<button type="button" onclick="recordRatings2()" id="btnR2">Continue</button>
 		</div>
 		<div id="ExitSurveyDiv">
 			<h2>Part 6 of 6: Exit Survey</h2>
@@ -234,7 +234,9 @@
 			I liked that the AI showed me two options to pick between, instead of only picking the option it thought was best.
 			<br/>Strongly Disagree <input type="range" id="EQ4" min="0" max="5" /> Strongly Agree
 			<hr/><br/>
-			<button type="button" onclick="nextStep()" id="btnExitFinish">Finish!</button>
+			Do you have any additional feedback or comments (optional)?
+			<textarea id="txtFeedback" name="txtFeedback" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+			<button type="button" onclick="recordExitSurvey()" id="btnExitFinish">Finish!</button>
 		</div>
 		<div id="GoodbyeDiv">
 			<h2>Thank You!</h2>
@@ -260,8 +262,9 @@
 		</div>
 		<div id="ErrorDiv">
 			<h2>Processing Error!</h2>
-			An error has occurred! This can happen if the AI receives unexpected input it doesn't know how to handle. Click the button below to try to recover.
-			<button id="btnError" onclinck="errorRecovery()">Recover</button>
+			An error has occurred! This can happen if the AI receives unexpected input it doesn't know how to handle. Click the button below to try to recover.<br/>
+			<div id="errormsg"></div>
+			<button id="btnError" onclick="errorRecovery()">Recover</button>
 		</div>
 		
 	</div>
@@ -372,7 +375,9 @@ function btnConsentSubmit(){
 	}
 	//Done with validation, proceed to next step:
 	else{
-		//TODO: Save consent timestamp.
+		//Save consent timestamp.
+		NewPilotAppRecord()
+		//Move on to the next step.
 		nextStep();
 	}	
 }
@@ -380,8 +385,17 @@ function btnConsentSubmit(){
 /*
 This function is called when the "Continue" button is pressed on the Demographics questions.
 */
-function btnDemographicsContinue(){
-	//TODO: Save answers to DB. 
+async function btnDemographicsContinue(){
+	//Save answers to DB. 
+	var Age = document.getElementById("Age").value;
+	if (null == Age || "" == Age) Age = -1;
+	var Gender = document.getElementById("Gender").value;
+	var Experience = document.getElementById("Experience").value;
+	var English = document.getElementById("English").value;
+	//Put it all together into the DB call:
+	var params = { "SessionID": sessionid, "Age": Age, "Gender":Gender, "Experience":Experience,"English":English};
+	await AzureFunction("RecordPilotAppDemographics",params);
+	
 	//No validation needed for this one. Blanks are OK.
 	nextStep();
 }
@@ -419,8 +433,8 @@ async function btnPrompt(){
 			document.getElementById("lblQ3").innerHTML = Q3;
 		}
 	}
-	catch{
-		processingError();
+	catch(err){
+		processingError(err);
 	}
 }
 /*
@@ -464,21 +478,84 @@ async function btnQA(){
 			FirstResultTextExit.innerHTML = baselineDocHTML;
 			SecondResultTextExit.innerHTML = finalQADocHTML;
 		}
+		//Save answers to the DB:		
+		var params = { "SessionID": sessionid, "Prompt": firstPrompt, "Q1":Q1,"A1":A1,"Q2":Q2,"A2":A2,"Q3":Q3,"A3":A3,"DocBaseline":baselineDoc,"DocQA":finalQADoc,"ShowQAFirst": (showQAFirst ? "1" : "0")};//unitary + converts bool to int.
+		await AzureFunction("RecordPilotAppPromptAndDocs",params);
+		
 		//Once processing is complete, move on to the next screen:
 		nextStep();
 	}
-	catch{
-		processingError();
+	catch(err){
+		processingError(err);
 	}
 }
-
-
+/*
+Record results from the first document:
+*/
+async function recordRatings1(){
+	console.log("Recording ratings for doc 1...")
+	//save to DB:
+	R1Q1 = document.getElementById("R1Q1");
+	R1Q2 = document.getElementById("R1Q2");
+	R1Q3 = document.getElementById("R1Q3");
+	if(showQAFirst){
+		var params = { "SessionID": "220", "QACloseness": R1Q1, "QAUsefulness":R1Q2,"QAOverall":R1Q3}
+		await AzureFunction("RecordPilotAppQARatings",params);
+	}
+	else {
+		var params = { "SessionID": "220", "BaselineCloseness": R1Q1, "BaselineUsefulness":R1Q2,"BaselineOverall":R1Q3}
+		await AzureFunction("RecordPilotAppBaselineRatings",params);
+	}
+	//go to the next step:
+	nextStep();
+	console.log("Recorded!")
+}
+/*
+Record results from the second document:
+*/
+async function recordRatings2(){
+	console.log("Recording ratings for doc 2...")
+	//save to DB:
+	R2Q1 = document.getElementById("R2Q1");
+	R2Q2 = document.getElementById("R2Q2");
+	R2Q3 = document.getElementById("R2Q3");
+	if(showQAFirst){
+		var params = { "SessionID": "220", "BaselineCloseness": R2Q1, "BaselineUsefulness":R2Q2,"BaselineOverall":R2Q3}
+		await AzureFunction("RecordPilotAppBaselineRatings",params);
+	}
+	else {
+		var params = { "SessionID": "220", "QACloseness": R2Q1, "QAUsefulness":R2Q2,"QAOverall":R2Q3}
+		await AzureFunction("RecordPilotAppQARatings",params);
+	}
+	//go to the next step:
+	nextStep();
+	console.log("Recorded!")
+}
+/*
+Record results from the second document:
+*/
+async function recordExitSurvey(){
+	console.log("Recording exit survey...")
+	//save to DB:
+	EQ1 = document.getElementById("EQ1");
+	EQ2 = document.getElementById("EQ2");
+	EQ3 = document.getElementById("EQ3");
+	EQ4 = document.getElementById("EQ4");
+	Feedback = document.getElementById("txtFeedback");
+	params = { "SessionID": "220", "ExitAnnoying": EQ1, "ExitEngaged":EQ2,"ExitWilling":EQ3,"ExitTwoOptions":EQ4,"ExitFeedback":Feedback}
+	await AzureFunction("RecordPilotAppExitSurvey",params);
+	//go to the next step:
+	nextStep();
+	console.log("Recorded!")
+}
 /*
 This function shows the processing error page. 
 */
-function processingError(){
+function processingError(err){
 	hideAll();
-	ErrorDiv.hidden = true;
+	ErrorDiv.hidden = false;
+	//document.getElementById("errormsg").innerHTML = err.message
+	console.log("Error! " + err.message);
 }
 /*
 This function coppies the first document to the clippboard. 
@@ -502,28 +579,49 @@ function copyDoc2(){
 An error recovery function: attempt to reload the most recent step.
 */
 function errorRecovery(){
+	console.log("Attempting recovery from step " + step);
 	step --;
 	nextStep();
 }
 
 //Make a call to the Azure Function that I have set up ahead of time.
 async function getSessionID(){
-	WaitingForAPI = true;
-	FunctionName = "GetNewSessionID"
-	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
-	response = await postData(URI, {})
+	var FunctionName = "GetNewSessionID"
+	var URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
+	var response = await postData(URI, {})
 	sessionid = response;
 }
 
-//Make a call to the OpenAI API Azure Function that I have set up ahead of time.
+/*
+Make a call to the OpenAI API Azure Function that I have set up ahead of time.
+*/
 async function OpenAIPrompt(prompt){
-	console.log(sessionid);
-	WaitingForAPI = true;
 	var params = {"prompt": prompt, "sessionid": sessionid};
-	FunctionName = "OpenAIPromptResponse"
-	URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
-	response = await postData(URI, params)
-	return response;
+	var functionName = "OpenAIPromptResponse"
+	return await AzureFunction(functionName,params);
+}
+
+/*
+Record the time that the consent is signed. This will also create a new record in the pilot app results table.
+*/
+async function NewPilotAppRecord(){
+	var params = {"SessionID": sessionid};
+	var functionName = "NewPilotAppRecord"
+	await AzureFunction(functionName,params);
+}
+
+/*
+Make a call to any Azyure function in the tixclarifyingquestions function set.
+*/
+async function AzureFunction(functionName, params){
+	try{
+		var URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + functionName + "?"
+		var response = await postData(URI, params)
+		return response;
+	}
+	catch(err){
+		processingError(err);
+	}
 }
 
 //Use Fetch to sent a POST request

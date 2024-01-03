@@ -1,33 +1,34 @@
 import logging
-import pyodbc
 import azure.functions as func
+import pyodbc
 import os
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Reserving a new session ID.')
-    newID = 0
+    logging.info('Python HTTP trigger function processed a request.')
+
+    SessionID = req.params.get('SessionID')
+    if not SessionID:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            SessionID = req_body.get('SessionID')
     try:
         conn = get_conn()
         cursor = conn.cursor()
-        sql = f"EXEC dbo.ReserveSessionID"
-        # Table should be created ahead of time in production app.
+        sql = "INSERT INTO PilotStudyResults (SessionID, ConsentSigned) VALUES ("+SessionID+", GETDATE())"
         cursor.execute(sql)
-        sql = f"SELECT newID = MAX(sessionID) FROM PromptLog"
-        # Table should be created ahead of time in production app.
-        cursor.execute(sql)
-        newID = cursor.fetchone()[0]
         conn.commit()
-        logging.info('New ID: ' + str(newID))
     except Exception as e:
         logging.error(e)
         if 'sql' in locals(): 
             #print(sql)
-            return "Error getting a new session ID! Error: " + str(e)
+            return "Error writing to DB! SQL attempted: " + sql
         else: return "Error writing to DB! SQL variable never initialized."
-    return  func.HttpResponse(str(newID), status_code=200)
-    
-    
+    return "DB Write Success! Session ID " + SessionID + " has been recorded as having signed the consent form."
+
 ###################################################################################
 ## Connect to the tixclarifyingquestions database and return the connection object
 ###################################################################################
