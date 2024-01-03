@@ -54,7 +54,7 @@ def SavePrompt(prompt,SessionID):
         if 'sql' in locals(): 
             #print(sql)
             return "Error writing to DB! SQL attempted: " + sql
-        else: return "Error writing to DB! SQL variable never initialized."
+        else: return e.message
     return "DB Write Success!"
 
 def SaveResponse(response,SessionID):
@@ -78,6 +78,13 @@ def SaveResponse(response,SessionID):
 ## Connect to the tixclarifyingquestions database and return the connection object
 ###################################################################################
 def get_conn():
-    connection_string = os.getenv('SQLConnectionString')
+
+    #print(pyodbc.drivers())
+    server = 'tixclarifyingquestions.database.windows.net'
+    database = 'ClarifyingQuestionsData'
+    username = 'ClarifyingQuestions'
+    password = os.getenv('SQLPassword') 
+    driver= '{ODBC Driver 18 for SQL Server}'
+    connection_string = 'DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password+';Encrypt=yes;TrustServerCertificate=yes;Connection Timeout=30;'
     conn = pyodbc.connect(connection_string)
     return conn

@@ -32,6 +32,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 ## Connect to the tixclarifyingquestions database and return the connection object
 ###################################################################################
 def get_conn():
-    connection_string = os.getenv('SQLConnectionString')
+    #print(pyodbc.drivers())
+    server = 'tixclarifyingquestions.database.windows.net'
+    database = 'ClarifyingQuestionsData'
+    username = 'ClarifyingQuestions'
+    password = os.getenv('SQLPassword')
+    driver= '{ODBC Driver 18 for SQL Server}'
+    connection_string = 'DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password+';Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
     conn = pyodbc.connect(connection_string)
     return conn

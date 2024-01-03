@@ -28,7 +28,7 @@
 	</div>
 	<hr/>
 	<Body>
-	<div id="bodyDiv" style="height:80%;overflow:auto;position:relative;left:5%;width:90%">
+	<div id="bodyDiv" style="height:82%;overflow:auto;position:relative;left:5%;width:90%">
 		<div id="ConsentDiv">
 			<h2>University of Hawai‘i Online Survey Consent Form</h2>
 			Aloha! You are invited to participate in a pilot study conducted by Bernadette Tix from the Department of Information and Computer Science at the University of Hawai‘i. This research project is a part of a PhD Dissertation studying document creation by Artificial Intelligence programs. The purpose of the pilot study is to test whether the format of the proposed study has any major flaws or areas in need of improvement. 
@@ -78,7 +78,7 @@
 			Thank you for taking the time to participate in this study. In this study, you will be using AI to create a short document of your choosing. Completion of the study may take as little as a few minutes or as much as half an hour, depending on the complexity of the document you are trying to create. Please <strong>DO NOT</strong> press the back button on your broswer or refresh the page, as this will reset the survey and you will not be able to recover your work in progress. When you are ready to begin, please answer the following demographic questions about yourself and then click the "continue" button below.
 			<form action="javascript:btnDemographicsContinue()">
 				<ul>
-					<li><label for="Age">Age:</label><input id="Age" name="Age" type="number" min="18" max="100"/></li>
+					<li><label for="Age">Age:</label><input id="Age" name="Age" type="number" min="18" max="100" value="18"/></li>
 					<li> 
 						<label for="Gender">Gender:</label>
 						<select name="Gender" id="Gender">
@@ -91,7 +91,7 @@
 					<li> 
 						<label for="Experience">What is your prior experience with generative AI such as ChatGPT, Bard, or similar programs?</label></br>
 						<select name="Experience" id="Experience">
-							<option value="-1"></option>
+							<option value="0"></option>
 							<option value="3">I use generative AI regularly.</option>
 							<option value="2">I have used generative AI before, but not often.</option>
 							<option value="1">I have never used generative AI before.</option>
@@ -128,7 +128,7 @@
 		</div>
 		<div id="PleaseWaitDiv">
 			<h2>Please Wait ... </h2>
-			The AI is working on your request. This may take up to a minute.
+			The AI is working on your request. This may take several minutes.
 		</div>
 		<div id="QADiv">
 			<h2>Part 3 of 6: Questions and Answers</h2>
@@ -208,7 +208,7 @@
 			</select>
 			<hr/>
 			How would you rate the overall quality of this document?<br/>
-			<select name="R3Q3" id="R3Q3">
+			<select name="R2Q3" id="R2Q3">
 				<option value="0"></option>
 				<option value="5">Excellent quality.</option>
 				<option value="4">Above average quality.</option>
@@ -270,7 +270,7 @@
 	</div>
 	</body>
 	<footer>
-	<div id="Footer" style="top:93%;height:7%;background-color:#024731;color:#EEEEEE">
+	<div id="Footer" style="top:10%;height:7%;background-color:#024731;color:#EEEEEE">
 	<hr/>
 	<div id="FooterText" style="position:relative;left:5%;">
 		Dr. Kimberly Binsted, Principal Investigator</br>
@@ -388,7 +388,7 @@ This function is called when the "Continue" button is pressed on the Demographic
 async function btnDemographicsContinue(){
 	//Save answers to DB. 
 	var Age = document.getElementById("Age").value;
-	if (null == Age || "" == Age) Age = -1;
+	if (null == Age || "" == Age) Age = 0;
 	var Gender = document.getElementById("Gender").value;
 	var Experience = document.getElementById("Experience").value;
 	var English = document.getElementById("English").value;
@@ -495,15 +495,15 @@ Record results from the first document:
 async function recordRatings1(){
 	console.log("Recording ratings for doc 1...")
 	//save to DB:
-	R1Q1 = document.getElementById("R1Q1");
-	R1Q2 = document.getElementById("R1Q2");
-	R1Q3 = document.getElementById("R1Q3");
+	R1Q1 = document.getElementById("R1Q1").value;
+	R1Q2 = document.getElementById("R1Q2").value;
+	R1Q3 = document.getElementById("R1Q3").value;
 	if(showQAFirst){
-		var params = { "SessionID": "220", "QACloseness": R1Q1, "QAUsefulness":R1Q2,"QAOverall":R1Q3}
+		var params = { "SessionID": sessionid, "QACloseness": R1Q1, "QAUsefulness":R1Q2,"QAOverall":R1Q3}
 		await AzureFunction("RecordPilotAppQARatings",params);
 	}
 	else {
-		var params = { "SessionID": "220", "BaselineCloseness": R1Q1, "BaselineUsefulness":R1Q2,"BaselineOverall":R1Q3}
+		var params = { "SessionID": sessionid, "BaselineCloseness": R1Q1, "BaselineUsefulness":R1Q2,"BaselineOverall":R1Q3}
 		await AzureFunction("RecordPilotAppBaselineRatings",params);
 	}
 	//go to the next step:
@@ -516,15 +516,15 @@ Record results from the second document:
 async function recordRatings2(){
 	console.log("Recording ratings for doc 2...")
 	//save to DB:
-	R2Q1 = document.getElementById("R2Q1");
-	R2Q2 = document.getElementById("R2Q2");
-	R2Q3 = document.getElementById("R2Q3");
+	R2Q1 = document.getElementById("R2Q1").value;
+	R2Q2 = document.getElementById("R2Q2").value;
+	R2Q3 = document.getElementById("R2Q3").value;
 	if(showQAFirst){
-		var params = { "SessionID": "220", "BaselineCloseness": R2Q1, "BaselineUsefulness":R2Q2,"BaselineOverall":R2Q3}
+		var params = { "SessionID": sessionid, "BaselineCloseness": R2Q1, "BaselineUsefulness":R2Q2,"BaselineOverall":R2Q3}
 		await AzureFunction("RecordPilotAppBaselineRatings",params);
 	}
 	else {
-		var params = { "SessionID": "220", "QACloseness": R2Q1, "QAUsefulness":R2Q2,"QAOverall":R2Q3}
+		var params = { "SessionID": sessionid, "QACloseness": R2Q1, "QAUsefulness":R2Q2,"QAOverall":R2Q3}
 		await AzureFunction("RecordPilotAppQARatings",params);
 	}
 	//go to the next step:
@@ -537,12 +537,12 @@ Record results from the second document:
 async function recordExitSurvey(){
 	console.log("Recording exit survey...")
 	//save to DB:
-	EQ1 = document.getElementById("EQ1");
-	EQ2 = document.getElementById("EQ2");
-	EQ3 = document.getElementById("EQ3");
-	EQ4 = document.getElementById("EQ4");
-	Feedback = document.getElementById("txtFeedback");
-	params = { "SessionID": "220", "ExitAnnoying": EQ1, "ExitEngaged":EQ2,"ExitWilling":EQ3,"ExitTwoOptions":EQ4,"ExitFeedback":Feedback}
+	EQ1 = document.getElementById("EQ1").value;
+	EQ2 = document.getElementById("EQ2").value;
+	EQ3 = document.getElementById("EQ3").value;
+	EQ4 = document.getElementById("EQ4").value;
+	Feedback = document.getElementById("txtFeedback").value;
+	params = { "SessionID": sessionid, "ExitAnnoying": EQ1, "ExitEngaged":EQ2,"ExitWilling":EQ3,"ExitTwoOptions":EQ4,"ExitFeedback":Feedback}
 	await AzureFunction("RecordPilotAppExitSurvey",params);
 	//go to the next step:
 	nextStep();
@@ -586,10 +586,9 @@ function errorRecovery(){
 
 //Make a call to the Azure Function that I have set up ahead of time.
 async function getSessionID(){
-	var FunctionName = "GetNewSessionID"
-	var URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + FunctionName + "?"
-	var response = await postData(URI, {})
-	sessionid = response;
+	console.log("Getting session ID...");
+	sessionid = await AzureFunction("GetNewSessionID",{});
+	return sessionid
 }
 
 /*
@@ -597,8 +596,7 @@ Make a call to the OpenAI API Azure Function that I have set up ahead of time.
 */
 async function OpenAIPrompt(prompt){
 	var params = {"prompt": prompt, "sessionid": sessionid};
-	var functionName = "OpenAIPromptResponse"
-	return await AzureFunction(functionName,params);
+	return await AzureFunction("OpenAIPromptResponse",params);
 }
 
 /*
