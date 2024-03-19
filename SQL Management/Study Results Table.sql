@@ -22,6 +22,7 @@ CREATE TABLE StudyResults (
     DocBaseline VARCHAR(MAX),
     DocQA VARCHAR(MAX),
     ShowQAFirst BIT,
+    LLM VARCHAR(10),
 
     --Document Preferences
     OverallPreference INT,

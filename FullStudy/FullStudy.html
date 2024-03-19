@@ -59,20 +59,26 @@
 	  cursor: pointer;
 	}
 
-	/*float container style script from https://coder-coder.com/display-divs-side-by-side/*/
-	.float-container {
-		border: 3px solid #fff;
-		padding: 20px;
+	/*grid container style script from https://www.w3schools.com/css/css_grid.asp */
+	
+	.grid-container {
+	  display: grid;
+	  grid-template-columns: auto auto;
+	  gap: 10px;
+	  padding: 10px;
 	}
 
-	.float-child {
-		width: 50%;
-		float: left;
-		padding: 10px;
-		border: 1px solid #ccc;
-		font: 16px Georgia, Garamond, Serif;
-		overflow: auto;
-	} 
+	.grid-container > div {
+	  text-align: center;
+	  padding: 20px 0;
+	  border: 1px solid #ccc;
+	  overflow:auto;
+	}
+
+	.grid-full {
+	  grid-column-start: 1;
+	  grid-column-end: 3;
+	}
 	</style>
 	</head>
 	<div style="height:8%;left:5%; width:90%; vertical-align:middle;position:relative;color:#002315">
@@ -214,31 +220,33 @@
 		<div id="FirstResultDiv">
 			<h2>Part 5 of 9: Rating the Douments</h2>
 			Thank you for your thoughtful answers! The AI has considered your prompt and your responses to its questions, and has generated two different possible outputs for you. Please read each one and answer the questions that follow. <br/><br/>
-			<div class="float-container">
-				<div id="FirstResultText" class="float-child"></div>
-				<div id="SecondResultText" class="float-child"></div>
+			<div class="grid-container">
+				<div id="FirstResultText"></div>
+				<div id="SecondResultText"></div>
+				<div class="grid-full">
+					</br>
+					<h3>Questions:</h3>
+					<hr/>
+					<center><strong>
+					Which document do you prefer overall? <br/>
+					<div class="slidecontainer">
+					  Strongly Prefer Document 1
+					  <input id="Q1" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
+					  Strongly Prefer Document 2
+					  </br>^</br>
+					  No Preference
+					</div><br/><br/>
+					Which document would be more useful to you in its current state? <br/>
+					<div class="slidecontainer">
+					  Document 1 is More Useful
+					  <input id="Q2" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
+					  Document 2 is More Useful
+					  </br>^</br>
+					  Both are Equally Useful
+					</div>
+					</strong></center>
+				</div>
 			</div>
-			</br>
-			<h3>Questions:</h3>
-			<hr/>
-			<center><strong>
-			Which document do you prefer overall? <br/>
-			<div class="slidecontainer">
-			  Strongly Prefer Document 1
-			  <input id="Q1" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
-			  Strongly Prefer Document 2
-			  </br>^</br>
-			  No Preference
-			</div><br/><br/>
-			Which document would be more useful to you in its current state? <br/>
-			<div class="slidecontainer">
-			  Document 1 is More Useful
-			  <input id="Q2" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
-			  Document 2 is More Useful
-			  </br>^</br>
-			  Both are Equally Useful
-			</div>
-			</strong></center>
 			<button type="button" onclick="btnQA1()" id="btnQA1">Continue</button>
 		</div>
 		<div id="ExitSurveyDiv">
@@ -513,7 +521,7 @@ async function btnQA(){
 		//Move on to another "Please Wait" screen while processing.
 		nextStep();
 		//Save QA to the DB:		
-		var params = { "SessionID": sessionid, "Prompt": firstPrompt, "Q1":Q1,"A1":A1,"Q2":Q2,"A2":A2,"Q3":Q3,"A3":A3};
+		var params = { "SessionID": sessionid, "Prompt": firstPrompt, "Q1":Q1,"A1":A1,"Q2":Q2,"A2":A2,"Q3":Q3,"A3":A3,"LLM":LLM};
 		await AzureFunction("RecordPromptAndQA",params);
 		//Submit these answers to the AI:
 		QAPrompt = "Generate a high quality document that meets the users needs, considering both their initial prompt and the answers they gave when asked for details. Include creative original insights that will improve the quality of the document but do not deviate too far from the user's original intent.";
@@ -537,7 +545,7 @@ async function btnQA(){
 			SecondResultTextExit.innerHTML = finalQADocHTML;
 		}
 		//Save answers to the DB:		
-		var params = { "SessionID": sessionid, "DocBaseline":baselineDoc,"DocQA":finalQADoc,"ShowQAFirst": (showQAFirst ? "1" : "0"),"LLM":LLM};
+		var params = { "SessionID": sessionid, "DocBaseline":baselineDoc,"DocQA":finalQADoc,"ShowQAFirst": (showQAFirst ? "1" : "0")};
 		await AzureFunction("RecordInitialDocs",params);
 		
 		//Once processing is complete, move on to the next screen:
@@ -708,7 +716,7 @@ Make a call to any Azyure function in the tixclarifyingquestions function set.
 */
 async function AzureFunction(functionName, params){
 	try{
-		console.log("Azure Function Call: " + functionName + " : " + params);
+		console.log("Azure Function Call: " + functionName);
 		var URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + functionName + "?"
 		var response = await postData(URI, params)
 		return response;

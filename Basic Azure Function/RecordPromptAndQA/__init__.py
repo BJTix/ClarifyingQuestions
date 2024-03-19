@@ -34,7 +34,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         conn = get_conn()
         cursor = conn.cursor()
         sql = "UPDATE StudyResults SET Prompt = '"+ Prompt +"', Q1 = '" + Q1 + "', A1 = '" + A1 + "', Q2 = '" + Q2 + "', A2 = '" + A2 + "', Q3 = '" + Q3 + "', A3 = '" + A3\
-        + "', LLM = " + LLM + " WHERE SessionID = " + SessionID
+        + "', LLM = '" + LLM + "' WHERE SessionID = " + SessionID
         cursor.execute(sql)
         conn.commit()
     except Exception as e:

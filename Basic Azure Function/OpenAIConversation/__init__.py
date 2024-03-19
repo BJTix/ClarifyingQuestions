@@ -49,7 +49,7 @@ def CallOpenAI(prompt,SessionID,LLM,UseQuestions):
         #if the questions have been filled out, then we need to format the conversation to include the questions and answers. 
         #We are manually overwriting the way the conversation has actually played out with an idealized version. 
         #However, we only do this if the "UseQuestions" parameter is set to "yes":
-        myMessages.append({"role" : "user", "content" : row.prompt})
+        myMessages.append({"role" : "user", "content" : StudyRecord.prompt})
         if (UseQuestions):
             myMessages.append({"role" : "assistant", "content" : StudyRecord.Q1})
             myMessages.append({"role" : "user", "content" : StudyRecord.A1})
@@ -64,30 +64,31 @@ def CallOpenAI(prompt,SessionID,LLM,UseQuestions):
         #After the documents are created, we are doing revisions. So, we will want to include the idealized conversation up to this point, 
         #and then the actual rows of conversation after the documents were created.
         #We need to determine which document to use:
-        if(UseQuestions & StudyRecord.DocQA is not None):
-            myMessages.append({"role" : "assistant", "content" : StudyRecord.DocQA})
-            if(StudyRecord.RevisionPromptQA1 is not None):  
-                myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA1})
-                myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA1})
-            if(StudyRecord.RevisionPromptQA2 is not None):  
-                myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA2})
-                myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA2})
-            if(StudyRecord.RevisionPromptQA3 is not None):  
-                myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA3})
-                myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA3})
-            myMessages.append({"role" : "user", "content" : prompt})
-        else:
-            myMessages.append({"role" : "assistant", "content" : StudyRecord.DocBaseline})
-            if(StudyRecord.RevisionPromptBaseline1 is not None):  
-                myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline1})
-                myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline1})
-            if(StudyRecord.RevisionPromptBaseline2 is not None):  
-                myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline2})
-                myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline2})
-            if(StudyRecord.RevisionPromptBaseline3 is not None):  
-                myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline3})
-                myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline3})
-            myMessages.append({"role" : "user", "content" : prompt})
+        if(StudyRecord.DocQA is not None):
+            if(UseQuestions):
+                myMessages.append({"role" : "assistant", "content" : StudyRecord.DocQA})
+                if(StudyRecord.RevisionPromptQA1 is not None):  
+                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA1})
+                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA1})
+                if(StudyRecord.RevisionPromptQA2 is not None):  
+                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA2})
+                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA2})
+                if(StudyRecord.RevisionPromptQA3 is not None):  
+                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA3})
+                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA3})
+                myMessages.append({"role" : "user", "content" : prompt})
+            else:
+                myMessages.append({"role" : "assistant", "content" : StudyRecord.DocBaseline})
+                if(StudyRecord.RevisionPromptBaseline1 is not None):  
+                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline1})
+                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline1})
+                if(StudyRecord.RevisionPromptBaseline2 is not None):  
+                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline2})
+                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline2})
+                if(StudyRecord.RevisionPromptBaseline3 is not None):  
+                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline3})
+                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline3})
+                myMessages.append({"role" : "user", "content" : prompt})
 
 
     #Determine the model to use:
