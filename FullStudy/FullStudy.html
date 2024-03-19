@@ -346,6 +346,14 @@ var RejectedDiv = document.getElementById("RejectedDiv");
 var showQAFirst = false;
 if(Math.random() < 0.5) showQAFirst = true;
 
+//Determine which LLM to use
+var LLM = "";
+var rand = Math.random();
+if(rand < 0.5) LLM = "GPT3";
+else LLM = "GPT4"
+
+console.log("LLM: " + LLM);
+
 /*Hide all the divs / steps.*/
 function hideAll(){
 	ConsentDiv.hidden = true;
@@ -462,10 +470,10 @@ async function btnPrompt(){
 			//Here we're going to go forward two steps. Once for the "please wait" screen and once for the question screen.
 			//This one takes us to a "please wait" screen.
 			nextStep();
-			fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + firstPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list. Include exactly 3 items in the list."
-			var ambiguity = await OpenAIPrompt(fullPrompt);
-			fullPrompt = "Consider the following request:\nuser:\"" + firstPrompt + "\" \nand the following identified points of ambiguity: \n\"" + ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified. Format your response as a numbered list of exactly 3 questions."
-			questions = await OpenAIPrompt(fullPrompt);
+			fullPrompt = "A user is requesting the creation of a new document. This is their request:\nuser:\"" + firstPrompt + "\"\nIdentify any areas of significant ambiguity in the prompt, areas that could benefit from more thought or attention from the user, or helpful tips the user may not have considered. Write these out in a short list."
+			var ambiguity = await OpenAIConversation(fullPrompt, false);
+			fullPrompt = "Write a list of three insightful questions for the user that will improve the document they want you to generate, based on the issues previously identified. Keep in mind that you will be generating the requested document based on the user's answers, and phrase the questions with this in mind. Format your response as a numbered list of exactly 3 questions."
+			questions = await OpenAIConversation(fullPrompt, false);
 			//Now we need to split the questions up into multiple questions:
 			intro = questions.substring(0, questions.indexOf("\n1") + 1);
 			endIndex = questions.indexOf("\n", questions.indexOf("\n3") + 1);
@@ -504,12 +512,14 @@ async function btnQA(){
 		//Continue on if validation was successful:
 		//Move on to another "Please Wait" screen while processing.
 		nextStep();
+		//Save QA to the DB:		
+		var params = { "SessionID": sessionid, "Prompt": firstPrompt, "Q1":Q1,"A1":A1,"Q2":Q2,"A2":A2,"Q3":Q3,"A3":A3};
+		await AzureFunction("RecordPromptAndQA",params);
 		//Submit these answers to the AI:
-		userAnswers = "1. " + A1 + "\n2. " + A2 + "\n3. " + A3;
-		fullPrompt = "Consider the following exchange. Attempt to create the document requested by the user, considering the answers they gave when asked for details.\nuser: \"" + firstPrompt + "\"\nassistant: \"" + intro + "\n" + Q1 + "\"\nuser: \"" + A1 + "\"\nassistant: \"" + Q2 + "\"\nuser: \"" + A2 + "\"\nassistant: \"" + Q3 + "\"\nuser: \"" + A3 + "\"";
+		QAPrompt = "Generate a high quality document that meets the users needs, considering both their initial prompt and the answers they gave when asked for details. Include creative original insights that will improve the quality of the document but do not deviate too far from the user's original intent.";
 		//We need both the final QA doc as well as a baseline to compare to:
-		finalQADoc = await OpenAIPrompt(fullPrompt);
-		baselineDoc = await OpenAIPrompt(firstPrompt);
+		finalQADoc = await OpenAIConversation(QAPrompt, true);
+		baselineDoc = await OpenAIConversation(firstPrompt, false);
 		var finalQADocHTML = finalQADoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
 		var baselineDocHTML = baselineDoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
 		if(showQAFirst) {
@@ -527,8 +537,8 @@ async function btnQA(){
 			SecondResultTextExit.innerHTML = finalQADocHTML;
 		}
 		//Save answers to the DB:		
-		var params = { "SessionID": sessionid, "Prompt": firstPrompt, "Q1":Q1,"A1":A1,"Q2":Q2,"A2":A2,"Q3":Q3,"A3":A3,"DocBaseline":baselineDoc,"DocQA":finalQADoc,"ShowQAFirst": (showQAFirst ? "1" : "0")};//unitary + converts bool to int.
-		await AzureFunction("RecordPilotAppPromptAndDocs",params);
+		var params = { "SessionID": sessionid, "DocBaseline":baselineDoc,"DocQA":finalQADoc,"ShowQAFirst": (showQAFirst ? "1" : "0"),"LLM":LLM};
+		await AzureFunction("RecordInitialDocs",params);
 		
 		//Once processing is complete, move on to the next screen:
 		nextStep();
@@ -666,11 +676,21 @@ async function getSessionID_inner(retries){
 /*
 Make a call to the OpenAI API Azure Function that I have set up ahead of time.
 */
+async function OpenAIConversation(prompt, useQuestions){
+	console.log("OpenAI Conversation Prompt: " + prompt)
+	var params = {"prompt": prompt, "sessionid": sessionid, "LLM": LLM,"UseQuestions":(useQuestions ? "yes" : "no")};
+	var response = await AzureFunction("OpenAIConversation",params);
+	//console.log("Response: " + response);
+	return response;
+}
+/*
+Make a call to the OpenAI API Azure Function that I have set up ahead of time.
+*/
 async function OpenAIPrompt(prompt){
 	console.log("OpenAI Prompt: " + prompt)
 	var params = {"prompt": prompt, "sessionid": sessionid};
 	var response = await AzureFunction("OpenAIPromptResponse",params);
-	console.log("Response: " + response);
+	//console.log("Response: " + response);
 	return response;
 }
 

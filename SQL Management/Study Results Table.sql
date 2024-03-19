@@ -26,25 +26,25 @@ CREATE TABLE StudyResults (
     --Document Preferences
     OverallPreference INT,
     UsefulnessPreference INT,
-    Doc1Feedback VARCHAR(MAX),
-    Doc2Feedback VARCHAR(MAX),
+    DocQAFeedback VARCHAR(MAX),
+    DocBaselineFeedback VARCHAR(MAX),
 
     --Document Revisions
-    RevisionPromptD1R1 VARCHAR(MAX),
-    RevisionPromptD1R2 VARCHAR(MAX),
-    RevisionPromptD1R3 VARCHAR(MAX),
+    RevisionPromptQA1 VARCHAR(MAX),
+    RevisionPromptQA2 VARCHAR(MAX),
+    RevisionPromptQA3 VARCHAR(MAX),
     
-    RevisionPromptD2R1 VARCHAR(MAX),
-    RevisionPromptD2R2 VARCHAR(MAX),
-    RevisionPromptD2R3 VARCHAR(MAX),
+    RevisionPromptBaseline1 VARCHAR(MAX),
+    RevisionPromptBaseline2 VARCHAR(MAX),
+    RevisionPromptBaseline3 VARCHAR(MAX),
 
-    RevisedDocD1R1 VARCHAR(MAX),
-    RevisedDocD1R2 VARCHAR(MAX),
-    RevisedDocD1R3 VARCHAR(MAX),
+    RevisedDocQA1 VARCHAR(MAX),
+    RevisedDocQA2 VARCHAR(MAX),
+    RevisedDocQA3 VARCHAR(MAX),
 
-    RevisedDocD2R1 VARCHAR(MAX),
-    RevisedDocD2R2 VARCHAR(MAX),
-    RevisedDocD2R3 VARCHAR(MAX),
+    RevisedDocBaseline1 VARCHAR(MAX),
+    RevisedDocBaseline2 VARCHAR(MAX),
+    RevisedDocBaseline3 VARCHAR(MAX),
 
     --Exit Survey
     ExitAnnoying INT,
