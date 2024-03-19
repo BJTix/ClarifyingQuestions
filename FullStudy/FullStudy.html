@@ -1,0 +1,715 @@
+<html>
+	<title>
+		Clarifying Questions Pilot App
+	</title>
+	<head>
+	<style>
+	button, input[type="button"], input[type="submit"] {
+		background-color: #024731;
+		border: none;
+		color:white;
+		border-radius: 8px;
+		margin: 4px 2px;
+		padding: 6px 8px;
+		font-weight:bold;
+	}
+	li {
+		margin: 4px;
+	}
+	range, input[type="range"]{
+		accent-color: #024731
+	}
+	
+	/*Slider style code from https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
+	.slidecontainer {
+	  width: 100%;
+	}
+
+	.slider {
+	  -webkit-appearance: none;
+	  width: 30%;
+	  height: 15px;
+	  border-radius: 5px;
+	  background: #d3d3d3;
+	  outline: none;
+	  opacity: 0.7;
+	  -webkit-transition: .2s;
+	  transition: opacity .2s;
+	}
+
+	.slider:hover {
+	  opacity: 1;
+	}
+
+	.slider::-webkit-slider-thumb {
+	  -webkit-appearance: none;
+	  appearance: none;
+	  width: 25px;
+	  height: 25px;
+	  border-radius: 50%;
+	  background: #04AA6D;
+	  cursor: pointer;
+	}
+
+	.slider::-moz-range-thumb {
+	  width: 25px;
+	  height: 25px;
+	  border-radius: 50%;
+	  background: #04AA6D;
+	  cursor: pointer;
+	}
+
+	/*float container style script from https://coder-coder.com/display-divs-side-by-side/*/
+	.float-container {
+		border: 3px solid #fff;
+		padding: 20px;
+	}
+
+	.float-child {
+		width: 50%;
+		float: left;
+		padding: 10px;
+		border: 1px solid #ccc;
+		font: 16px Georgia, Garamond, Serif;
+		overflow: auto;
+	} 
+	</style>
+	</head>
+	<div style="height:8%;left:5%; width:90%; vertical-align:middle;position:relative;color:#002315">
+		<h1><img src="ConsentLogo.png" style="height:50;width:100;"/>
+		        Clarifying Questions Pilot Study</h1>
+	</div>
+	<hr/>
+	<Body>
+	<div id="bodyDiv" style="height:82%;overflow:auto;position:relative;left:5%;width:90%">
+		<div id="ConsentDiv">
+			<h2>University of Hawai‘i Online Survey Consent Form</h2>
+			Aloha! You are invited to participate in a research study conducted by Bernadette Tix from the Department of Information and Computer Science at the University of Hawai‘i. This research project is a part of a PhD Dissertation studying document creation by Artificial Intelligence programs.
+			</br></br>
+			<div style="position:relative;left:10%;width:80%;height:50%;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll">
+				<h3>What am I being asked to do?</h3>
+				If you participate in this project, you will be asked to fill out a survey, as well as engage in a back-and-forth conversation with an AI chatbot about creating a document for your personal use, such as a letter, memo, or email. 				
+				<h3>Taking part in this study is your choice.</h3>
+				Your participation in this project is completely voluntary. You may stop participating at any time. If you stop being in the study, there will be no penalty or loss to you. 
+				
+				<h3>Why is this study being done?</h3>
+				The purpose of this project is to determine whether AI can produce better outputs by asking clarifying questions about what a user needs before creating AI-generated documents. I am seeking adult volunteers to generate documents using an AI, and to give feedback on the output which will allow us to determine whether or not the clarifying questions asked by the AI improved the AI-generated documents.	
+				
+				<h3>What will happen if I decide to take part in this study?</h3>
+				The survey will consist of a brief interaction with an AI chatbot, most likely lasting 10-15 minutes, as well as brief entry and exit surveys. The entry survey will ask for basic demographic information such as your age, gender, and prior experience with AI. When interacting with the AI, you will be asked to think of a document that you would like the AI to write and will answer questions the AI comes up with about your document needs. The exit survey will ask you to rate two different outputs from the AI with questions like, “Would you find this document usable in its current state?” “Is this document close to what you had in mind when you made the request?” and “How would you rate the overall quality of this document?” The survey is anonymous and will be conducted entirely online. The total length of the survey, including interaction with the AI, is expected to last 20-30 minutes.	
+				
+				<h3>What are the risks and benefits of taking part in this study?</h3>
+				I believe there is little risk to you for participating in this research project. You may become stressed or uncomfortable answering any of the survey questions. If you do become stressed or uncomfortable, you can take a break at any time. You can also stop taking the survey or you can withdraw from the project altogether.  
+				</br></br>
+				There will be no direct benefit to you for participating in this survey. The results of this project may help improve AI’s ability to work in cooperation with humans by giving AI the ability to ask questions and engage in dialog with humans before executing commands.
+				
+				<h3>Confidentiality and Privacy: </h3>
+				You will not be asked for any personal information, such as your name or address. Please do not include any personal information in your survey responses or in your responses to the AI. I will keep all study data secure on a private server. Only my University of Hawai'i advisor and I will have access to the information. Other agencies that have legal permission have the right to review research records. The University of Hawai'i Human Studies Program has the right to review research records for this study.
+				
+				<h3>Future Research Studies: </h3>
+				The data from this study will not be used or distributed for future research studies.  
+			</div>
+			</br>
+			Questions: If you have any questions about this study, please email me at bjavery@hawaii.edu You may also contact my advisor, Dr. Kimberly Binsted, at binsted@hawaii.edu
+			</br></br>
+			You may contact the UH Human Studies Program at 808.956.5007 or uhirb@hawaii.edu to discuss problems, concerns and questions, obtain information, or offer input with an informed individual who is unaffiliated with the specific research protocol. Please visit <a href="http://go.hawaii.edu/jRd">http://go.hawaii.edu/jRd</a> for more information on your rights as a research participant.  
+			</br></br>
+			If you agree to participate in this project, please give electronic consent by checking the box below:
+			</br></br>
+			<form action="javascript:btnConsentSubmit()">
+			  <input type="checkbox" id="chkConsent" name="chkConsent" value="Yes">
+			  <label for="chkConsent"> <strong>YES</strong> I agree to participate in this study.</label><br>
+			  <input type="Submit" value="Continue">
+			</form>
+
+		</div>
+		
+		<div id="ConnectingDiv">
+		<h2>Please Wait...</h2>
+		The experiment is currently being set up. This may take up to a minute.
+		</div>
+		
+		<div id="ScreenerDiv">
+			<h2>Part 1 of 9: Demographics Screener</h2>
+			This study is only open to participants who are over the age of 18 and fluent in English. Please answer the questions below to continue.
+			<form action="javascript:btnScreenerContinue()">
+				<ul>
+					<li><label for="Age">Age:</label><input id="Age" name="Age" type="number" min="18" max="100" value="18"/></li>
+					<li> 
+						<label for="English">Is English your primary spoken language?</label>
+						<select name="English" id="English">
+							<option value="_"></option>
+							<option value="Y">Yes</option>
+							<option value="N">No</option>
+						</select>
+					</li>
+				</ul>
+				<input type="Submit" value="Continue">
+			</form>
+		</div>
+		<div id="RejectedDiv">
+			This study is only open to participants who are over the age of 18 and fluent in English. Thank you for your interest! Please close the browser to exit the survey.
+		</div>
+		<div id="DemographicsDiv">
+			<h2>Part 2 of 9: Demographics</h2>
+			<h3>Welcome!</h3>
+			Thank you for taking the time to participate in this study. In this study, you will be using AI to create a short document of your choosing. Completion of the study may take as little as a few minutes or as much as half an hour, depending on the complexity of the document you are trying to create. Please <strong>DO NOT</strong> press the back button on your broswer or refresh the page, as this will reset the survey and you will not be able to recover your work in progress. When you are ready to begin, please answer the following demographic questions about yourself and then click the "continue" button below.
+			<form action="javascript:btnDemographicsContinue()">
+				<ul>
+					<li> 
+						<label for="Gender">Gender:</label>
+						<select name="Gender" id="Gender">
+							<option value="Blank"></option>
+							<option value="Female">Female</option>
+							<option value="Male">Male</option>
+							<option value="Other">Other / Nonbinary</option>
+						</select>
+					</li>
+					<li> 
+						<label for="Experience">What is your prior experience with generative AI such as ChatGPT, Bard, or similar programs?</label></br>
+						<select name="Experience" id="Experience">
+							<option value="0"></option>
+							<option value="3">I use generative AI regularly.</option>
+							<option value="2">I have used generative AI before, but not often.</option>
+							<option value="1">I have never used generative AI before.</option>
+						</select>
+					</li>
+				<input type="Submit" value="Continue">
+			</form>
+		</div>
+		<div id="PromptDiv">
+			<h2>Part 3 of 9: Describe your Document</h2>
+			On this page, you will be communicating with an AI that is capable of writing short documents such as letters, memos, emails, and short reports. Please think of a document you would like the AI to create for you. This could be a document you actually need, or one that you have just made up for the experiment. Either way, please think in detail about what you would need this document to include. When you are ready, write out what you need in the textbox below. After you submit your prompt, the AI will ask you a series of questions, and you will then be given two versions of the document you requested, and asked for feedback on which version you prefer.
+			<br/><br/>
+			Example prompts: 
+			<br/><em><ul>
+			<li>“Please write a cover letter for a job working in tech support for a college student with one year of prior tech support experience.” </li>
+			
+			<li>“Write an email to my boss asking them if they can meet next week to discuss a project which is behind schedule.”</li>
+			
+			<li>“I want to reach out to a friend I haven’t spoken to in a while. Give me an outline for a letter to help me figure out what I should say.”</li>
+			</ul></em>
+			<h3>Enter your prompt below:</h3>
+			<textarea id="prompt" name="txt_prompt" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea>
+			<br/>
+			<button type="button" onclick="btnPrompt()" id="btn_Prompt">Continue</button>
+			
+		</div>
+		<div id="PleaseWaitDiv">
+			<h2>Please Wait ... </h2>
+			The AI is working on your request. This may take several minutes.
+		</div>
+		<div id="QADiv">
+			<h2>Part 4 of 9: Questions and Answers</h2>
+			To give you the best results, the AI would like to ask you a few questions about the document you need. Please provide your answers and then click "continue."
+			<h3>Questions:</h3>
+			<label for="txtA1" id="lblQ1"></label><br/>
+			<textarea id="txtA1" name="txtA1" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
+			<label for="txtA2" id="lblQ2"></label><br/>
+			<textarea id="txtA2" name="txtA2" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
+			<label for="txtA3" id="lblQ3"></label><br/>
+			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
+			<button type="button" onclick="btnQA()" id="btnQA">Continue</button>
+		</div>
+		<div id="FirstResultDiv">
+			<h2>Part 5 of 9: Rating the Douments</h2>
+			Thank you for your thoughtful answers! The AI has considered your prompt and your responses to its questions, and has generated two different possible outputs for you. Please read each one and answer the questions that follow. <br/><br/>
+			<div class="float-container">
+				<div id="FirstResultText" class="float-child"></div>
+				<div id="SecondResultText" class="float-child"></div>
+			</div>
+			</br>
+			<h3>Questions:</h3>
+			<hr/>
+			<center><strong>
+			Which document do you prefer overall? <br/>
+			<div class="slidecontainer">
+			  Strongly Prefer Document 1
+			  <input id="Q1" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
+			  Strongly Prefer Document 2
+			  </br>^</br>
+			  No Preference
+			</div><br/><br/>
+			Which document would be more useful to you in its current state? <br/>
+			<div class="slidecontainer">
+			  Document 1 is More Useful
+			  <input id="Q2" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
+			  Document 2 is More Useful
+			  </br>^</br>
+			  Both are Equally Useful
+			</div>
+			</strong></center>
+			<button type="button" onclick="btnQA1()" id="btnQA1">Continue</button>
+		</div>
+		<div id="ExitSurveyDiv">
+			<h2>Part 6 of 6: Exit Survey</h2>
+			Thank you for rating the AI’s responses. For the final step in this study, please rate the following statements on a scale of “Strongly Agree” to “Strongly Disagree”.
+			<hr/>
+			It was annoying to have to answer questions even though I had already explained what I wanted the AI to do.
+			<br/>Strongly Disagree <input type="range" id="EQ1" min="0" max="5" /> Strongly Agree
+			<hr/>
+			I felt like the AI was more engaged with my problem because it asked follow-up questions.
+			<br/>Strongly Disagree <input type="range" id="EQ2" min="0" max="5" /> Strongly Agree
+			<hr/>
+			I would be willing to answer follow-up questions from an AI if answering questions led to better results.
+			<br/>Strongly Disagree <input type="range" id="EQ3" min="0" max="5" /> Strongly Agree
+			<hr/>
+			I liked that the AI showed me two options to pick between, instead of only picking the option it thought was best.
+			<br/>Strongly Disagree <input type="range" id="EQ4" min="0" max="5" /> Strongly Agree
+			<hr/><br/>
+			Do you have any additional feedback or comments (optional)?
+			<textarea id="txtFeedback" name="txtFeedback" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+			<button type="button" onclick="recordExitSurvey()" id="btnExitFinish">Finish!</button>
+		</div>
+		<div id="GoodbyeDiv">
+			<h2>Thank You!</h2>
+			You have completed the experiment! Thank you for your participation. If you have any further questions, please contact Bernadette Tix at bjavery@hawaii.edu. Please close your browser to exit. 
+			<br/><br/>
+			If you would like to keep a copy of the documents you created, you can copy them below. Once you exit the browser or navigate away from this page, you will no longer be able to access these documents.
+			<br/><br/>
+			<table>
+			<tr>
+				<td>
+				<h3>Document #1</h3>
+				<div id="FirstResultTextExit" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll"></div>
+				<br/>
+					<button type="button" onclick="copyDoc1()" id="btnExitFinish">Copy to Clipbord</button>
+				</td><td>
+				<h3>Document #2</h3>
+				<div id="SecondResultTextExit" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll"></div>
+				<br/>
+					<button type="button" onclick="copyDoc2()" id="btnExitFinish">Copy to Clipbord</button>
+				</td>
+			</tr>
+			</table>
+		</div>
+		<div id="ErrorDiv">
+			<h2>Processing Error!</h2>
+			An error has occurred! This can happen if the AI receives unexpected input it doesn't know how to handle. Click the button below to try to recover.<br/>
+			<div id="errormsg"></div>
+			<button id="btnError" onclick="errorRecovery()">Recover</button>
+		</div>
+		
+	</div>
+	</body>
+	<footer>
+	<div id="Footer" style="top:10%;height:7%;background-color:#024731;color:#EEEEEE">
+	<hr/>
+	<div id="FooterText" style="position:relative;left:5%;width:90%">
+		Dr. Kimberly Binsted, Principal Investigator</br>
+		<em>Project Title:</em> Better Results Through Ambiguity Resolution: Large Language Models that Ask Clarifying Questions
+	</div>
+	</div>
+	</footer>
+</html>
+<script>
+//Define variables used for prompt, QA, and responses
+var promptNum = 0;
+var questions = "";
+var firstPrompt = "";
+var userAnswers = "";
+var finalQADoc = "";
+var baselineDoc = "";
+var sessionid = 0;
+var intro = "";
+var Q1 = "";
+var Q2 = "";
+var Q3 = "";
+var A1 = "";
+var A2 = "";
+var A3 = "";
+var endIndex = -1;
+//Get the session ID:
+getSessionID();
+
+//define variables and functions for progressing through the wizard
+var step = 0;
+var ConsentDiv = document.getElementById("ConsentDiv");
+var DemographicsDiv = document.getElementById("DemographicsDiv");
+var PromptDiv = document.getElementById("PromptDiv");
+var PleaseWaitDiv = document.getElementById("PleaseWaitDiv");
+var QADiv = document.getElementById("QADiv");
+var FirstResultDiv = document.getElementById("FirstResultDiv");
+var SecondResultDiv = document.getElementById("SecondResultDiv");
+var FirstResultText = document.getElementById("FirstResultText");
+var SecondResultText = document.getElementById("SecondResultText");
+var FirstResultTextExit = document.getElementById("FirstResultTextExit");
+var SecondResultTextExit = document.getElementById("SecondResultTextExit");
+var ExitSurveyDiv = document.getElementById("ExitSurveyDiv");
+var GoodbyeDiv = document.getElementById("GoodbyeDiv");
+var ErrorDiv = document.getElementById("ErrorDiv");
+var ConnectingDiv = document.getElementById("ConnectingDiv");
+var ScreenerDiv = document.getElementById("ScreenerDiv");
+var RejectedDiv = document.getElementById("RejectedDiv");
+
+//Determine which output will be shown first by a coin flip.
+var showQAFirst = false;
+if(Math.random() < 0.5) showQAFirst = true;
+
+/*Hide all the divs / steps.*/
+function hideAll(){
+	ConsentDiv.hidden = true;
+	DemographicsDiv.hidden = true;
+	PromptDiv.hidden = true;
+	PleaseWaitDiv.hidden = true;
+	QADiv.hidden = true;
+	FirstResultDiv.hidden = true;
+	//SecondResultDiv.hidden= true;
+	ExitSurveyDiv.hidden = true;
+	GoodbyeDiv.hidden = true;
+	ErrorDiv.hidden = true;
+	ConnectingDiv.hidden = true;
+	ScreenerDiv.hidden = true;
+	RejectedDiv.hidden = true;
+}
+
+/*
+This function is used to progress through the wizard.
+*/
+function nextStep(){
+	step++;
+	//Check for a good connection:
+	if(2 == step && 0 < sessionid) step++;
+	//reveal just one div based on the step. Hide the rest.
+	hideAll();
+		
+	switch(step){
+		case 1: ConsentDiv.hidden = false; break;
+		case 2: ConnectingDiv.hidden = false; break;
+		case 3: ScreenerDiv.hidden = false; break;
+		case 4: RejectedDiv.hidden = false; break;
+		case 5: DemographicsDiv.hidden = false; break;
+		case 6: PromptDiv.hidden = false; break;
+		case 7: PleaseWaitDiv.hidden = false; break; //the please wait screen is shown twice.
+		case 8: QADiv.hidden = false; break;
+		case 9: PleaseWaitDiv.hidden = false; break; //the please wait screen is shown twice.
+		case 10: FirstResultDiv.hidden = false; break;
+		//case 11: SecondResultDiv.hidden = false; break;
+		case 11: ExitSurveyDiv.hidden = false; break;
+		default: GoodbyeDiv.hidden = false; break;
+	}		
+}
+//Call the nextStep function once to initialize:
+nextStep();
+/*
+This function is called when the "Submit" button is pressed on the consent.
+*/
+function btnConsentSubmit(){
+	var scrollDiv = document.getElementById("ConsentScroll");
+	//Check if they have clicked "I Agree"
+	var checked = document.getElementById("chkConsent").checked;
+	if(!checked){ 
+		alert('You must agree to participate in this study before proceeding. Please check "YES I agree" before continue.');
+		return;
+	}
+	//check if the user read the whole agreement:
+	else if(scrollDiv.scrollTop == 0){
+		alert("Please read the entire consent before continuing.");
+		return;
+	}
+	//Done with validation, proceed to next step:
+	else{
+		//Move on to the next step.
+		nextStep();
+	}	
+}
+async function btnScreenerContinue(){
+	var Age = document.getElementById("Age").value;
+	if (null == Age || "" == Age) Age = 0;
+	var English = document.getElementById("English").value;
+	//Warning message:
+	if(English == "_" || Age == 0) alert("Please answer both questions in order to continue!");
+	else if(English == "Y" && 18 <= Age) {
+		//Advance two steps to skip over the screener rejection screen.
+		nextStep();
+		nextStep();
+	}
+	else {
+		//Advance just one step to get to the screener rejection screen.
+		nextStep();
+	}
+}
+/*
+This function is called when the "Continue" button is pressed on the Demographics questions.
+*/
+async function btnDemographicsContinue(){
+	//Save answers to DB. 
+	var Age = document.getElementById("Age").value;
+	if (null == Age || "" == Age) Age = 0;
+	var English = document.getElementById("English").value;
+	var Gender = document.getElementById("Gender").value;
+	var Experience = document.getElementById("Experience").value;
+	//Put it all together into the DB call:
+	//TODO: Need a new place to save these results.
+	var params = { "SessionID": sessionid, "Age": Age, "Gender":Gender, "Experience":Experience,"English":English};
+	await AzureFunction("RecordPilotAppDemographics",params);
+	
+	//No validation needed for this one. Blanks are OK.
+	nextStep();
+}
+/*
+This function is called when the "Continue" button is pressed on the Prompt screen.
+*/
+async function btnPrompt(){
+	try
+	{	
+		var txtPrompt = document.getElementById("prompt");
+		if(txtPrompt.value == null || txtPrompt.value.length < 10){
+			alert("Please enter a prompt describing the document you would like the AI to write for you.");
+		}
+		else{
+			firstPrompt = txtPrompt.value;
+			//Here we're going to go forward two steps. Once for the "please wait" screen and once for the question screen.
+			//This one takes us to a "please wait" screen.
+			nextStep();
+			fullPrompt = "You are a helpful AI assistant used to generate short documents. A user is requesting the creation of a new document. This is their request:\nuser:\"" + firstPrompt + "\"\nIdentify any areas of significant ambiguity or necessary information that has not been included, and write these out in a short list. Include exactly 3 items in the list."
+			var ambiguity = await OpenAIPrompt(fullPrompt);
+			fullPrompt = "Consider the following request:\nuser:\"" + firstPrompt + "\" \nand the following identified points of ambiguity: \n\"" + ambiguity + "\"\nRespond as though this request was just made by the user. Start with a friendly greeting, then ask a respectful and concise question to clarify the user's needs, keeping in mind the ambiguity you just identified. Format your response as a numbered list of exactly 3 questions."
+			questions = await OpenAIPrompt(fullPrompt);
+			//Now we need to split the questions up into multiple questions:
+			intro = questions.substring(0, questions.indexOf("\n1") + 1);
+			endIndex = questions.indexOf("\n", questions.indexOf("\n3") + 1);
+			if (endIndex == -1) endIndex = questions.length;
+			Q1 = questions.substring(questions.indexOf("\n1") + 1, questions.indexOf("\n2", questions.indexOf("\n1")));
+			Q2 = questions.substring(questions.indexOf("\n2") + 1, questions.indexOf("\n3", questions.indexOf("\n2")));
+			Q3 = questions.substring(questions.indexOf("\n3") + 1, endIndex);
+			//Now that the processing is done, we're ready for the Q/A screen:
+			nextStep();
+			//Set up the question prompts:
+			document.getElementById("lblQ1").innerHTML = Q1;
+			document.getElementById("lblQ2").innerHTML = Q2;
+			document.getElementById("lblQ3").innerHTML = Q3;
+		}
+	}
+	catch(err){
+		processingError(err);
+	}
+}
+/*
+This function is called when the "Continue" button is pressed on the Q/A screen.
+*/
+async function btnQA(){
+	try{
+		//Get the answers off the page:
+		A1 = document.getElementById("txtA1").value;
+		A2 = document.getElementById("txtA2").value;
+		A3 = document.getElementById("txtA3").value;
+		//Perform validation:
+		if(A1 == null || A1.length == 0 || 
+			A2 == null || A2.length == 0 ||
+			A3 == null || A3.length == 0){
+			alert("Please answer all questions before continuing!");
+			return; //End here if validation fails.
+		}
+		//Continue on if validation was successful:
+		//Move on to another "Please Wait" screen while processing.
+		nextStep();
+		//Submit these answers to the AI:
+		userAnswers = "1. " + A1 + "\n2. " + A2 + "\n3. " + A3;
+		fullPrompt = "Consider the following exchange. Attempt to create the document requested by the user, considering the answers they gave when asked for details.\nuser: \"" + firstPrompt + "\"\nassistant: \"" + intro + "\n" + Q1 + "\"\nuser: \"" + A1 + "\"\nassistant: \"" + Q2 + "\"\nuser: \"" + A2 + "\"\nassistant: \"" + Q3 + "\"\nuser: \"" + A3 + "\"";
+		//We need both the final QA doc as well as a baseline to compare to:
+		finalQADoc = await OpenAIPrompt(fullPrompt);
+		baselineDoc = await OpenAIPrompt(firstPrompt);
+		var finalQADocHTML = finalQADoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
+		var baselineDocHTML = baselineDoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
+		if(showQAFirst) {
+			FirstResultText.innerHTML = finalQADocHTML;
+			SecondResultText.innerHTML = baselineDocHTML;
+			
+			FirstResultTextExit.innerHTML = finalQADocHTML;
+			SecondResultTextExit.innerHTML = baselineDocHTML;
+		}
+		else {
+			FirstResultText.innerHTML = baselineDocHTML;
+			SecondResultText.innerHTML = finalQADocHTML;
+			
+			FirstResultTextExit.innerHTML = baselineDocHTML;
+			SecondResultTextExit.innerHTML = finalQADocHTML;
+		}
+		//Save answers to the DB:		
+		var params = { "SessionID": sessionid, "Prompt": firstPrompt, "Q1":Q1,"A1":A1,"Q2":Q2,"A2":A2,"Q3":Q3,"A3":A3,"DocBaseline":baselineDoc,"DocQA":finalQADoc,"ShowQAFirst": (showQAFirst ? "1" : "0")};//unitary + converts bool to int.
+		await AzureFunction("RecordPilotAppPromptAndDocs",params);
+		
+		//Once processing is complete, move on to the next screen:
+		nextStep();
+	}
+	catch(err){
+		processingError(err);
+	}
+}
+/*
+Record results from the first document:
+*/
+async function recordRatings1(){
+	console.log("Recording ratings for doc 1...")
+	//save to DB:
+	R1Q1 = document.getElementById("R1Q1").value;
+	R1Q2 = document.getElementById("R1Q2").value;
+	R1Q3 = document.getElementById("R1Q3").value;
+	if(showQAFirst){
+		var params = { "SessionID": sessionid, "QACloseness": R1Q1, "QAUsefulness":R1Q2,"QAOverall":R1Q3}
+		await AzureFunction("RecordPilotAppQARatings",params);
+	}
+	else {
+		var params = { "SessionID": sessionid, "BaselineCloseness": R1Q1, "BaselineUsefulness":R1Q2,"BaselineOverall":R1Q3}
+		await AzureFunction("RecordPilotAppBaselineRatings",params);
+	}
+	//go to the next step:
+	nextStep();
+	console.log("Recorded!")
+}
+/*
+Record results from the second document:
+*/
+async function recordRatings2(){
+	console.log("Recording ratings for doc 2...")
+	//save to DB:
+	R2Q1 = document.getElementById("R2Q1").value;
+	R2Q2 = document.getElementById("R2Q2").value;
+	R2Q3 = document.getElementById("R2Q3").value;
+	if(showQAFirst){
+		var params = { "SessionID": sessionid, "BaselineCloseness": R2Q1, "BaselineUsefulness":R2Q2,"BaselineOverall":R2Q3}
+		await AzureFunction("RecordPilotAppBaselineRatings",params);
+	}
+	else {
+		var params = { "SessionID": sessionid, "QACloseness": R2Q1, "QAUsefulness":R2Q2,"QAOverall":R2Q3}
+		await AzureFunction("RecordPilotAppQARatings",params);
+	}
+	//go to the next step:
+	nextStep();
+	console.log("Recorded!")
+}
+/*
+Record results from the second document:
+*/
+async function recordExitSurvey(){
+	console.log("Recording exit survey...")
+	//save to DB:
+	EQ1 = document.getElementById("EQ1").value;
+	EQ2 = document.getElementById("EQ2").value;
+	EQ3 = document.getElementById("EQ3").value;
+	EQ4 = document.getElementById("EQ4").value;
+	Feedback = document.getElementById("txtFeedback").value;
+	params = { "SessionID": sessionid, "ExitAnnoying": EQ1, "ExitEngaged":EQ2,"ExitWilling":EQ3,"ExitTwoOptions":EQ4,"ExitFeedback":Feedback}
+	await AzureFunction("RecordPilotAppExitSurvey",params);
+	//go to the next step:
+	nextStep();
+	console.log("Recorded!")
+}
+/*
+This function shows the processing error page. 
+*/
+function processingError(err){
+	hideAll();
+	ErrorDiv.hidden = false;
+	//document.getElementById("errormsg").innerHTML = err.message
+	console.log("Error! " + err.message);
+}
+/*
+This function coppies the first document to the clippboard. 
+*/
+function copyDoc1(){
+	if(showQAFirst) navigator.clipboard.writeText(finalQADoc);
+	else navigator.clipboard.writeText(baselineDoc);
+	alert("Document #1 has been coppied to your clipboard. You are free to keep or use this document as you wish.");
+}
+
+/*
+This function coppies the second document to the clippboard. 
+*/
+function copyDoc2(){
+	if(showQAFirst) navigator.clipboard.writeText(baselineDoc);
+	else navigator.clipboard.writeText(finalQADoc);
+	alert("Document #2 has been coppied to your clipboard. You are free to keep or use this document as you wish.");
+}
+
+/*
+An error recovery function: attempt to reload the most recent step.
+*/
+function errorRecovery(){
+	console.log("Attempting recovery from step " + step);
+	step --;
+	nextStep();
+}
+
+//Make a call to the Azure Function that I have set up ahead of time.
+async function getSessionID(){
+	//Sometimes it takes a few tries to get a session ID, so we're going to try a few times:
+	var MaxAttempts = 12;
+	var result = await getSessionID_inner(MaxAttempts);
+	if (result.substring(0,5) == "Error"){
+		console.log("Failed to get session ID after " + MaxAttempts + " attempts. Server response: " + result);
+		return -1;
+	}
+	else{
+		console.log("Successfully obtained Session ID: " + result);
+		//If we are on the "waiting for connection" step, then advance once a good connection is established.
+		if(2 == step) nextStep();
+		sessionid = result;
+		//Save consent timestamp.
+		NewPilotAppRecord();
+		return result;
+	}
+}
+async function getSessionID_inner(retries){
+	//Sometimes it takes a few tries to get a session ID, so we're going to retry if needed:
+	console.log("Attempting to get a session ID... " + retries + " retries remaining.");
+	var sessionid = await AzureFunction("GetNewSessionID",{});
+	if(sessionid.substring(0,5) == "Error"){
+		if(retries < 1) return sessionid;
+		else return await getSessionID_inner(retries - 1);
+	}
+	else{
+		return sessionid;
+	}
+}
+/*
+Make a call to the OpenAI API Azure Function that I have set up ahead of time.
+*/
+async function OpenAIPrompt(prompt){
+	console.log("OpenAI Prompt: " + prompt)
+	var params = {"prompt": prompt, "sessionid": sessionid};
+	var response = await AzureFunction("OpenAIPromptResponse",params);
+	console.log("Response: " + response);
+	return response;
+}
+
+/*
+Record the time that the consent is signed. This will also create a new record in the pilot app results table.
+*/
+async function NewPilotAppRecord(){
+	var params = {"SessionID": sessionid};
+	var functionName = "NewPilotAppRecord"
+	await AzureFunction(functionName,params);
+}
+
+/*
+Make a call to any Azyure function in the tixclarifyingquestions function set.
+*/
+async function AzureFunction(functionName, params){
+	try{
+		console.log("Azure Function Call: " + functionName + " : " + params);
+		var URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + functionName + "?"
+		var response = await postData(URI, params)
+		return response;
+	}
+	catch(err){
+		processingError(err);
+	}
+}
+
+//Use Fetch to sent a POST request
+async function postData(url = "", data = {}) {
+  const response = await fetch(url, {
+    method: "POST",
+    mode: "cors", 
+    credentials: "same-origin",
+    body: JSON.stringify(data),
+  });
+  
+  const answer = await response.text();
+  console.log(answer);
+  return answer; 
+}
+
+</script>

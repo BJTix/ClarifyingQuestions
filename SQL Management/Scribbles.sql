@@ -20,7 +20,7 @@ delete PromptLog where promptNum = 0
 INSERT INTO PilotStudyResults (SessionID, ConsentSigned) VALUES (123, GETDATE())
 
 SELECT * FROM PilotStudyResults
-DELETE PilotStudyResults
+--DELETE PilotStudyResults
 
 
 UPDATE PilotStudyResults SET Age = @, Gender = @, ExperienceLevel = @, EnglishPrimary = @ WHERE SessionID = @
@@ -29,3 +29,17 @@ UPDATE PilotStudyResults SET Age = @, Gender = @, ExperienceLevel = @, EnglishPr
 UPDATE PilotStudyResults SET Age = 35, Gender = F, ExperienceLevel = 2, EnglishPrimary = Y WHERE SessionID = 220
 
 --ALTER TABLE PilotStudyResults ADD CompletedAt DATETIME NULL
+SELECT * FROM PromptLog where sessionid = 285 order by sessionID, promptNum
+select * from PilotStudyResults where SessionID = 285
+
+
+select UsefullnessDiff = AVG(QAUsefulness - BaselineUsefulness),
+    UsefullnessSTDQA = STDEV(QAUsefulness),
+    UsefullnessSTDBL = STDEV(QAUsefulness),
+    ClosenessDiff = AVG(QACloseness - BaselineCloseness),
+    ClosenessSTDQA = STDEV(QACloseness),
+    ClosenessSTDBL = STDEV(BaselineCloseness),
+    OverallDiff = AVG(QAOverall - BaselineOverall),
+    OverallSTDQA = STDEV(QAOverall),
+    OverallSTDBL = STDEV(BaselineOverall)
+from PilotStudyResults
