@@ -36,20 +36,24 @@ def CallOpenAI(prompt,SessionID,LLM,UseQuestions):
     
     #Depending on how far along we are in the process determines how we format the conversation
     myMessages = []
-    myMessages.append({"role": "system", "content": "You are a helpful assistant designed to help users create short documents by asking insightful questions to clarify the users needs and make them think about things they have not considered, and then create high-quality professional documents after discussing the details with the user."})
+    #Vary the system message depending on if we are doing question-asking or not:
+    if(UseQuestions):
+        myMessages.append({"role": "system", "content": "You are a helpful assistant designed to help users create short, high-quality documents by asking insightful questions to clarify the users needs and make them think about things they have not considered, and then create high-quality professional documents after discussing the details with the user."})
+    else:
+        myMessages.append({"role": "system", "content": "You are a helpful assistant designed to help users create short, high-quality professional documents."})
 
     #if there is no record, or the questions have not been filled out yet, then we can simply include the full conversation log:
-    if (StudyRecord is None or len(StudyRecord) == 0 or StudyRecord.Q1 is None):
+    if (StudyRecord == None or StudyRecord.Q1 == None or StudyRecord.Q1 == ""):
         #format the conversation for ChatGPT parameters
         for row in Conversation:
             myMessages.append({"role" : "user", "content" : row.prompt})
-            if(row.response is not None): myMessages.append({"role" : "assistant", "content" : row.response})
+            if(row.response != None): myMessages.append({"role" : "assistant", "content" : row.response})
     
     else:
         #if the questions have been filled out, then we need to format the conversation to include the questions and answers. 
         #We are manually overwriting the way the conversation has actually played out with an idealized version. 
         #However, we only do this if the "UseQuestions" parameter is set to "yes":
-        myMessages.append({"role" : "user", "content" : StudyRecord.prompt})
+        myMessages.append({"role" : "user", "content" : StudyRecord.Prompt})
         if (UseQuestions):
             myMessages.append({"role" : "assistant", "content" : StudyRecord.Q1})
             myMessages.append({"role" : "user", "content" : StudyRecord.A1})
@@ -57,35 +61,35 @@ def CallOpenAI(prompt,SessionID,LLM,UseQuestions):
             myMessages.append({"role" : "user", "content" : StudyRecord.A2})
             myMessages.append({"role" : "assistant", "content" : StudyRecord.Q3})
             myMessages.append({"role" : "user", "content" : StudyRecord.A3})
-            #If there are no documents created yet, add a final prompt instructing the LLM to create the document based on these questions and answers. 
-            #This will be the expected prompt at this point. This is only neccessary in the question-inclusive scenario.
-            if(StudyRecord.DocQA is None): myMessages.append({"role" : "system", "content" : prompt})
+        #If there are no documents created yet, add a final prompt instructing the LLM to create the document based on these questions and answers. 
+        #This will be the expected prompt at this point. This is only neccessary in the question-inclusive scenario.
+        if(StudyRecord.DocQA == None or StudyRecord.DocQA == ""): myMessages.append({"role" : "system", "content" : prompt})
 
         #After the documents are created, we are doing revisions. So, we will want to include the idealized conversation up to this point, 
         #and then the actual rows of conversation after the documents were created.
         #We need to determine which document to use:
-        if(StudyRecord.DocQA is not None):
+        else:
             if(UseQuestions):
                 myMessages.append({"role" : "assistant", "content" : StudyRecord.DocQA})
-                if(StudyRecord.RevisionPromptQA1 is not None):  
+                if(StudyRecord.RevisionPromptQA1 != None and StudyRecord.RevisionPromptQA1 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA1})
                     myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA1})
-                if(StudyRecord.RevisionPromptQA2 is not None):  
+                if(StudyRecord.RevisionPromptQA2 != None and StudyRecord.RevisionPromptQA2 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA2})
                     myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA2})
-                if(StudyRecord.RevisionPromptQA3 is not None):  
+                if(StudyRecord.RevisionPromptQA3 != None and StudyRecord.RevisionPromptQA3 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA3})
                     myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA3})
                 myMessages.append({"role" : "user", "content" : prompt})
             else:
                 myMessages.append({"role" : "assistant", "content" : StudyRecord.DocBaseline})
-                if(StudyRecord.RevisionPromptBaseline1 is not None):  
+                if(StudyRecord.RevisionPromptBaseline1 != None and StudyRecord.RevisionPromptBaseline1 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline1})
                     myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline1})
-                if(StudyRecord.RevisionPromptBaseline2 is not None):  
+                if(StudyRecord.RevisionPromptBaseline2 != None and StudyRecord.RevisionPromptBaseline2 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline2})
                     myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline2})
-                if(StudyRecord.RevisionPromptBaseline3 is not None):  
+                if(StudyRecord.RevisionPromptBaseline3 != None and StudyRecord.RevisionPromptBaseline3 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline3})
                     myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline3})
                 myMessages.append({"role" : "user", "content" : prompt})
@@ -191,7 +195,7 @@ def getStudyRecord(SessionID):
         cursor.execute(sql)
         result = cursor.fetchall()
         #print(result)
-        return result
+        return result[0]
     except Exception as e:
         logging.error(e)
         if 'sql' in locals(): 

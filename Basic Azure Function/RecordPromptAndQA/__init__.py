@@ -18,6 +18,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         A2 = req_body.get('A2')
         Q3 = req_body.get('Q3')
         A3 = req_body.get('A3')
+        Feedback = req_body.get('Feedback')
     except ValueError:
         return "Parameter Error!"
     
@@ -29,12 +30,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     A2 = A2.replace("'", "''")
     Q3 = Q3.replace("'", "''")
     A3 = A3.replace("'", "''")
+    Feedback = Feedback.replace("'", "''")
 
     try:
         conn = get_conn()
         cursor = conn.cursor()
         sql = "UPDATE StudyResults SET Prompt = '"+ Prompt +"', Q1 = '" + Q1 + "', A1 = '" + A1 + "', Q2 = '" + Q2 + "', A2 = '" + A2 + "', Q3 = '" + Q3 + "', A3 = '" + A3\
-        + "', LLM = '" + LLM + "' WHERE SessionID = " + SessionID
+        + "', LLM = '" + LLM + "', QuestionsFeedback = '" + Feedback + "' WHERE SessionID = " + SessionID
         cursor.execute(sql)
         conn.commit()
     except Exception as e:

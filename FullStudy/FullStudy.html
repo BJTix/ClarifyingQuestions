@@ -65,19 +65,21 @@
 	  display: grid;
 	  grid-template-columns: auto auto;
 	  gap: 10px;
-	  padding: 10px;
 	}
 
 	.grid-container > div {
-	  text-align: center;
 	  padding: 20px 0;
 	  border: 1px solid #ccc;
-	  overflow:auto;
 	}
 
 	.grid-full {
 	  grid-column-start: 1;
 	  grid-column-end: 3;
+	}
+	
+	.text-div{	
+	  -webkit-user-select: all; /* for Safari */
+	  user-select: all;
 	}
 	</style>
 	</head>
@@ -87,7 +89,7 @@
 	</div>
 	<hr/>
 	<Body>
-	<div id="bodyDiv" style="height:82%;overflow:auto;position:relative;left:5%;width:90%">
+	<div id="bodyDiv" style="position:relative;left:5%;width:90%;min-height:80%">
 		<div id="ConsentDiv">
 			<h2>University of Hawai‘i Online Survey Consent Form</h2>
 			Aloha! You are invited to participate in a research study conducted by Bernadette Tix from the Department of Information and Computer Science at the University of Hawai‘i. This research project is a part of a PhD Dissertation studying document creation by Artificial Intelligence programs.
@@ -115,7 +117,6 @@
 				<h3>Future Research Studies: </h3>
 				The data from this study will not be used or distributed for future research studies.  
 			</div>
-			</br>
 			Questions: If you have any questions about this study, please email me at bjavery@hawaii.edu You may also contact my advisor, Dr. Kimberly Binsted, at binsted@hawaii.edu
 			</br></br>
 			You may contact the UH Human Studies Program at 808.956.5007 or uhirb@hawaii.edu to discuss problems, concerns and questions, obtain information, or offer input with an informed individual who is unaffiliated with the specific research protocol. Please visit <a href="http://go.hawaii.edu/jRd">http://go.hawaii.edu/jRd</a> for more information on your rights as a research participant.  
@@ -132,7 +133,7 @@
 		
 		<div id="ConnectingDiv">
 		<h2>Please Wait...</h2>
-		The experiment is currently being set up. This may take up to a minute.
+		The experiment is currently being set up. This may take up to two minutes.
 		</div>
 		
 		<div id="ScreenerDiv">
@@ -140,7 +141,7 @@
 			This study is only open to participants who are over the age of 18 and fluent in English. Please answer the questions below to continue.
 			<form action="javascript:btnScreenerContinue()">
 				<ul>
-					<li><label for="Age">Age:</label><input id="Age" name="Age" type="number" min="18" max="100" value="18"/></li>
+					<li><label for="Age">Age:</label><input id="Age" name="Age" type="number" min="1" max="100"/></li>
 					<li> 
 						<label for="English">Is English your primary spoken language?</label>
 						<select name="English" id="English">
@@ -215,23 +216,24 @@
 			<textarea id="txtA2" name="txtA2" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
 			<label for="txtA3" id="lblQ3"></label><br/>
 			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
+			<div>
+			Would you like to provide any thoughts or feedback about these questions?
+			<textarea id="txtFeedbackOnQuestions" name="txtFeedbackOnQuestions" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+			</div>
 			<button type="button" onclick="btnQA()" id="btnQA">Continue</button>
 		</div>
 		<div id="FirstResultDiv">
 			<h2>Part 5 of 9: Rating the Douments</h2>
-			Thank you for your thoughtful answers! The AI has considered your prompt and your responses to its questions, and has generated two different possible outputs for you. Please read each one and answer the questions that follow. <br/><br/>
+			Thank you for your thoughtful answers! The AI has considered your prompt and your responses to its questions, and has generated two different possible documents for you. Please read each one and answer the questions that follow. <br/><br/>
 			<div class="grid-container">
-				<div id="FirstResultText"></div>
-				<div id="SecondResultText"></div>
+				<div class="text-div" id="FirstResultText" style="overflow:auto;min-height:150px;max-height:500px"></div>
+				<div class="text-div" id="SecondResultText" style="overflow:auto;min-height:150px;max-height:500px"></div>
 				<div class="grid-full">
-					</br>
-					<h3>Questions:</h3>
-					<hr/>
 					<center><strong>
 					Which document do you prefer overall? <br/>
 					<div class="slidecontainer">
 					  Strongly Prefer Document 1
-					  <input id="Q1" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
+					  <input id="prefSlider" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
 					  Strongly Prefer Document 2
 					  </br>^</br>
 					  No Preference
@@ -239,15 +241,23 @@
 					Which document would be more useful to you in its current state? <br/>
 					<div class="slidecontainer">
 					  Document 1 is More Useful
-					  <input id="Q2" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
+					  <input id="useSlider" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
 					  Document 2 is More Useful
 					  </br>^</br>
 					  Both are Equally Useful
 					</div>
 					</strong></center>
 				</div>
+				<div>
+				Do you have any feedback about document 1?
+				<textarea id="txtDoc1Feedback1" name="txtDoc1Feedback1" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				</div>
+				<div>
+				Do you have any feedback about document 2?
+				<textarea id="txtDoc2Feedback1" name="txtDoc2Feedback2" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				</div>
 			</div>
-			<button type="button" onclick="btnQA1()" id="btnQA1">Continue</button>
+			<button type="button" onclick="recordInitialRatings()" id="btnRatings1">Continue</button>
 		</div>
 		<div id="ExitSurveyDiv">
 			<h2>Part 6 of 6: Exit Survey</h2>
@@ -458,7 +468,7 @@ async function btnDemographicsContinue(){
 	//Put it all together into the DB call:
 	//TODO: Need a new place to save these results.
 	var params = { "SessionID": sessionid, "Age": Age, "Gender":Gender, "Experience":Experience,"English":English};
-	await AzureFunction("RecordPilotAppDemographics",params);
+	await AzureFunction("RecordDemographics",params);
 	
 	//No validation needed for this one. Blanks are OK.
 	nextStep();
@@ -510,6 +520,7 @@ async function btnQA(){
 		A1 = document.getElementById("txtA1").value;
 		A2 = document.getElementById("txtA2").value;
 		A3 = document.getElementById("txtA3").value;
+		Feedback = document.getElementById("txtFeedbackOnQuestions").value;
 		//Perform validation:
 		if(A1 == null || A1.length == 0 || 
 			A2 == null || A2.length == 0 ||
@@ -517,11 +528,12 @@ async function btnQA(){
 			alert("Please answer all questions before continuing!");
 			return; //End here if validation fails.
 		}
+		if (Feedback == null) Feedback = "";
 		//Continue on if validation was successful:
 		//Move on to another "Please Wait" screen while processing.
 		nextStep();
 		//Save QA to the DB:		
-		var params = { "SessionID": sessionid, "Prompt": firstPrompt, "Q1":Q1,"A1":A1,"Q2":Q2,"A2":A2,"Q3":Q3,"A3":A3,"LLM":LLM};
+		var params = { "SessionID": sessionid, "Prompt": firstPrompt, "Q1":Q1,"A1":A1,"Q2":Q2,"A2":A2,"Q3":Q3,"A3":A3,"LLM":LLM,"Feedback":Feedback};
 		await AzureFunction("RecordPromptAndQA",params);
 		//Submit these answers to the AI:
 		QAPrompt = "Generate a high quality document that meets the users needs, considering both their initial prompt and the answers they gave when asked for details. Include creative original insights that will improve the quality of the document but do not deviate too far from the user's original intent.";
@@ -558,19 +570,24 @@ async function btnQA(){
 /*
 Record results from the first document:
 */
-async function recordRatings1(){
-	console.log("Recording ratings for doc 1...")
+async function recordInitialRatings(){
+	console.log("Recording initial ratings ...")
 	//save to DB:
-	R1Q1 = document.getElementById("R1Q1").value;
-	R1Q2 = document.getElementById("R1Q2").value;
-	R1Q3 = document.getElementById("R1Q3").value;
+	Preference = document.getElementById("prefSlider").value;
+	Usefulness = document.getElementById("useSlider").value;
+	FeedbackDoc1 = document.getElementById("txtDoc1Feedback1").value;
+	FeedbackDoc2 = document.getElementById("txtDoc2Feedback1").value;
+		
 	if(showQAFirst){
-		var params = { "SessionID": sessionid, "QACloseness": R1Q1, "QAUsefulness":R1Q2,"QAOverall":R1Q3}
-		await AzureFunction("RecordPilotAppQARatings",params);
+		//if QA is shown first, invert the scores. That way positive scores always indicate preference for QA doc.
+		Preference = -Preference;
+		Usefulness = - Usefulness;
+		var params = { "SessionID": sessionid, "Preference": Preference, "Usefulness":Usefulness,"BaselineFeedback":FeedbackDoc2,"QAFeedback":FeedbackDoc1}
+		await AzureFunction("RecordInitialRatings",params);
 	}
 	else {
-		var params = { "SessionID": sessionid, "BaselineCloseness": R1Q1, "BaselineUsefulness":R1Q2,"BaselineOverall":R1Q3}
-		await AzureFunction("RecordPilotAppBaselineRatings",params);
+		var params = { "SessionID": sessionid, "Preference": Preference, "Usefulness":Usefulness,"BaselineFeedback":FeedbackDoc1,"QAFeedback":FeedbackDoc2}
+		await AzureFunction("RecordInitialRatings",params);
 	}
 	//go to the next step:
 	nextStep();
@@ -665,7 +682,7 @@ async function getSessionID(){
 		if(2 == step) nextStep();
 		sessionid = result;
 		//Save consent timestamp.
-		NewPilotAppRecord();
+		NewRecord();
 		return result;
 	}
 }
@@ -705,9 +722,9 @@ async function OpenAIPrompt(prompt){
 /*
 Record the time that the consent is signed. This will also create a new record in the pilot app results table.
 */
-async function NewPilotAppRecord(){
+async function NewRecord(){
 	var params = {"SessionID": sessionid};
-	var functionName = "NewPilotAppRecord"
+	var functionName = "NewRecord"
 	await AzureFunction(functionName,params);
 }
 
