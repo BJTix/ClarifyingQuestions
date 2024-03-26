@@ -49,4 +49,20 @@ SELECT * FROM PromptLog WHERE SessionID = 283 ORDER BY promptNum
 
 
 
-UPDATE StudyResults SET Prompt = 'Write an essay on the topic of chivalry in 14th century western Europe.', Q1 = '1. **Aspect Focus**: Could you specify which aspects of chivalry interest you most for this essay? For example, are you looking to explore the martial virtues of knights, the influence of courtly love on literature and society, the intertwining of chivalry with Christian values, or another facet of chivalric culture in 14th-century Western Europe?', A1 = 'The martial virtues of knights and how it impacts our view of morality and virtue today.', Q2 = '2. **Regional Emphasis**: From the broad landscape of Western Europe, are there specific regions or kingdoms (such as the Kingdom of France, the British Isles, the Holy Roman Empire, etc.) whose chivalric traditions and practices you would prefer to focus on? Or would you prefer a comparative approach that highlights differences between regions?', A2 = 'The country of greatest interest is England, but compare and contrast English ideals of chivalry with those found in Italy and France.', Q3 = '3. **Historical Context and Impact**: How important do you find the inclusion of major 14th-century events (like the Black Death, the Hundred Years'' War, the Papal Schism) in shaping and influencing chivalric ideals and practices? Additionally, would you like the essay to touch upon the legacy of these chivalric ideals, possibly tracing their influence to modern concepts of honor and conduct?', A3 = 'Yes! This is very important to the essay!', LLM = 'GPT4' WHERE SessionID = 350
+UPDATE StudyResults SET Prompt = 'Write an essay on the topic of chivalry in 14th century western Europe.', Q1 = '1. Can you specify which aspect of chivalry interests you most for this essay—such as the practices of knighthood, the principles of courtly love, or the ethical and moral code of chivalry—and whether you''d like to explore the ideal versus the reality of these practices in 14th century Western Europe?
+', A1 = 'Write about how the ideal differed from the practice and how the ideal still impacts culture today.', Q2 = '2. Would you prefer that the essay concentrates on chivalry within a particular country or region in Western Europe, like France or England, to provide a deeper, more nuanced analysis, or should it encompass a broader comparison across different Western European cultures?
+', A2 = 'The country of greatest interest is England, but compare and contrast English ideals of chivalry with those found in Italy and France.', Q3 = '3. How do you envision the purpose of this essay? Are you aiming for it to be an academic piece with a focus on historical analysis and interpretation based on primary sources, or are you looking for a more general audience engaging narrative that also includes how perceptions of 14th-century chivalry have been reconstructed or romanticized over time?', A3 = 'This is an essay for a course on historical western martial arts. The course is slightly academic, but a greater emphasis is placed on physical technique and competition than on scholarly research. This essay is one of the few pieces of academic work required in the curriculum. ', LLM = 'GPT4' WHERE SessionID = 351
+
+
+
+Select * FROM StudyResults where SessionID = 382
+Select * FROM PilotStudyResults where SessionID = 353
+
+Select * from PromptLog where sessionid = 359
+Delete PromptLog where sessionid = 358
+
+exec ReserveSessionID
+
+
+
+UPDATE StudyResults SET OverallPreference = -3, UsefulnessPreference = -3, DocBaselineFeedback = 'TestBaseline', DocQAFeedback = 'TestQA' WHERE SessionID = 365

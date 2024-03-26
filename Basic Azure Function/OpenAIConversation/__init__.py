@@ -73,26 +73,27 @@ def CallOpenAI(prompt,SessionID,LLM,UseQuestions):
                 myMessages.append({"role" : "assistant", "content" : StudyRecord.DocQA})
                 if(StudyRecord.RevisionPromptQA1 != None and StudyRecord.RevisionPromptQA1 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA1})
-                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA1})
+                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocQA1})
                 if(StudyRecord.RevisionPromptQA2 != None and StudyRecord.RevisionPromptQA2 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA2})
-                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA2})
+                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocQA2})
                 if(StudyRecord.RevisionPromptQA3 != None and StudyRecord.RevisionPromptQA3 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA3})
-                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocQA3})
-                myMessages.append({"role" : "user", "content" : prompt})
+                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocQA3})
             else:
                 myMessages.append({"role" : "assistant", "content" : StudyRecord.DocBaseline})
                 if(StudyRecord.RevisionPromptBaseline1 != None and StudyRecord.RevisionPromptBaseline1 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline1})
-                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline1})
+                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocBaseline1})
                 if(StudyRecord.RevisionPromptBaseline2 != None and StudyRecord.RevisionPromptBaseline2 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline2})
-                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline2})
+                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocBaseline2})
                 if(StudyRecord.RevisionPromptBaseline3 != None and StudyRecord.RevisionPromptBaseline3 != ""):  
                     myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline3})
-                    myMessages.append({"role" : "system", "content" : StudyRecord.RevisedDocBaseline3})
-                myMessages.append({"role" : "user", "content" : prompt})
+                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocBaseline3})
+            #Added in this system message, since GPT3.5 was not re-writing the document, but only addressing the latest thing the user asked for.
+            myMessages.append({"role" : "system", "content" : "The user has provided some additional feedback. Please re-write the entire document, modifying the original based on this new feedback"})
+            myMessages.append({"role" : "user", "content" : prompt})
 
 
     #Determine the model to use:

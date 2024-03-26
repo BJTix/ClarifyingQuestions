@@ -7,34 +7,18 @@ import os
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    SessionID = req.params.get('SessionID')    
-    #Prompt and discussion
-    Preference = req.params.get('Preference')
-    Usefulness = req.params.get('Usefulness')
-    BaselineFeedback = req.params.get('BaselineFeedback')
-    QAFeedback = req.params.get('QAFeedback')
+    try:
+        req_body = req.get_json()
+        SessionID = req_body.get('SessionID')
+        #Prompt and discussion
+        Preference = req_body.get('Preference')
+        Usefulness = req_body.get('Usefulness')
+        BaselineFeedback = req_body.get('BaselineFeedback')
+        QAFeedback = req_body.get('QAFeedback')
+    except ValueError:
+        return "Parameter Error!"
 
-    if not SessionID:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            SessionID = req_body.get('SessionID')
-            #Prompt and discussion
-            Preference = req_body.get('Preference')
-            Usefulness = req_body.get('Usefulness')
-            BaselineFeedback = req_body.get('BaselineFeedback')
-            QAFeedback = req_body.get('QAFeedback')
-
-    #input washing:
-    if(SessionID == None or not SessionID.isnumeric()):
-        return "SessionID must be a number! Received: " + SessionID
-    if(Preference == None or not Preference.lstrip("-").isnumeric()):
-        return "Preference must be a number! Received: " + Preference
-    if(Usefulness == None or not Usefulness.lstrip("-").isnumeric()):
-        return "BaselineUsefulness must be a number! Received: " + Usefulness
-    
+    #input washing:    
     BaselineFeedback = BaselineFeedback.replace("'", "''")
     QAFeedback = QAFeedback.replace("'", "''")
 
