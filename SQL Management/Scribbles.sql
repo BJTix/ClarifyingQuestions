@@ -66,3 +66,6 @@ exec ReserveSessionID
 
 
 UPDATE StudyResults SET OverallPreference = -3, UsefulnessPreference = -3, DocBaselineFeedback = 'TestBaseline', DocQAFeedback = 'TestQA' WHERE SessionID = 365
+
+
+ALTER TABLE StudyResults ADD OverallPreference2 INT NULL, UsefulnessPreference2 INT NULL, DocQAFeedback2 VARCHAR(MAX) NULL, DocBaselineFeedback2 VARCHAR(MAX) NULL

@@ -12,6 +12,18 @@
 		margin: 4px 2px;
 		padding: 6px 8px;
 		font-weight:bold;
+		border: 2px solid #024731;
+	}
+
+	button:hover {
+	  border: 2px solid #FFAA22;
+	}
+
+	button:disabled,
+	button[disabled]{
+	  background-color: #cccccc;
+		border: 2px solid #cccccc;
+	  color: #666666;
 	}
 	li {
 		margin: 4px;
@@ -127,7 +139,7 @@
 			<form action="javascript:btnConsentSubmit()">
 			  <input type="checkbox" id="chkConsent" name="chkConsent" value="Yes">
 			  <label for="chkConsent"> <strong>YES</strong> I agree to participate in this study.</label><br>
-			  <input type="Submit" value="Continue">
+			  <button>Continue</button>
 			</form>
 
 		</div>
@@ -152,7 +164,7 @@
 						</select>
 					</li>
 				</ul>
-				<input type="Submit" value="Continue">
+				<button>"Continue"</button>
 			</form>
 		</div>
 		<div id="RejectedDiv">
@@ -182,7 +194,7 @@
 							<option value="1">I have never used generative AI before.</option>
 						</select>
 					</li>
-				<input type="Submit" value="Continue">
+				<button>Continue</button>
 			</form>
 		</div>
 		<div id="PromptDiv">
@@ -200,7 +212,7 @@
 			<h3>Enter your prompt below:</h3>
 			<textarea id="prompt" name="txt_prompt" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea>
 			<br/>
-			<button type="button" onclick="btnPrompt()" id="btn_Prompt">Continue</button>
+			<button onclick="btnPrompt()" id="btn_Prompt">Continue</button>
 			
 		</div>
 		<div id="PleaseWaitDiv">
@@ -221,7 +233,7 @@
 			Would you like to provide any thoughts or feedback about these questions?
 			<textarea id="txtFeedbackOnQuestions" name="txtFeedbackOnQuestions" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
 			</div>
-			<button type="button" onclick="btnQA()" id="btnQA">Continue</button>
+			<button onclick="btnQA()" id="btnQA">Continue</button>
 		</div>
 		<div id="FirstResultDiv">
 			<h2>Part 5 of 9: Rating the Douments</h2>
@@ -258,7 +270,7 @@
 				<textarea id="txtDoc2Feedback1" name="txtDoc2Feedback2" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
 				</div>
 			</div>
-			<button type="button" onclick="recordInitialRatings()" id="btnRatings1">Continue</button>
+			<button onclick="recordInitialRatings()" id="btnRatings1">Continue</button>
 		</div>
 		<div id="RefiningDiv">
 			<h2>Part 6 of 9: Refining the Douments</h2>
@@ -269,15 +281,52 @@
 				<div>
 				Enter additional instructions for document 1 below:
 				<textarea id="txtDoc1Refine" name="txtDoc1Refine" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
-				<button type="button" onclick="refineDoc1()" id="btnRefineDoc1">Refine Document 1 (3 remaining)</button>
+				<button onclick="refineDoc1()" id="btnRefineDoc1">Refine Document 1 (3 remaining)</button>
 				</div>
 				<div>
 				Enter additional instructions for document 2 below:
 				<textarea id="txtDoc2Refine" name="txtDoc2Refine" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
-				<button type="button" onclick="refineDoc2()" id="btnRefineDoc2">Refine Document 2 (3 remaining)</button>
+				<button onclick="refineDoc2()" id="btnRefineDoc2">Refine Document 2 (3 remaining)</button>
 				</div>
 			</div>
-			<button type="button" onclick="recordInitialRatings()" id="btnRatings1">Continue to Next Step</button>
+			<button onclick="doneRefining()" id="btnDoneRefining">Continue to Next Step</button>
+		</div>
+		<div id="FinalResultDiv">
+			<h2>Part 7 of 9: Rating the Douments</h2>
+			<p>Thank you for taking the time to refine the documents. Please rate the two documents again, based on how they’ve turned out now after the refining process.</p>
+			<div class="grid-container">
+				<div class="text-div" id="FirstResultText2" style="min-height:150px;max-height:500px"></div>
+				<div class="text-div" id="SecondResultText2" style="min-height:150px;max-height:500px"></div>
+				<div class="grid-full">
+					<center><strong>
+					Which document do you prefer overall? <br/>
+					<div class="slidecontainer">
+					  Strongly Prefer Document 1
+					  <input id="prefSlider2" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
+					  Strongly Prefer Document 2
+					  </br>^</br>
+					  No Preference
+					</div><br/><br/>
+					Which document would be more useful to you in its current state? <br/>
+					<div class="slidecontainer">
+					  Document 1 is More Useful
+					  <input id="useSlider2" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
+					  Document 2 is More Useful
+					  </br>^</br>
+					  Both are Equally Useful
+					</div>
+					</strong></center>
+				</div>
+				<div>
+				Do you have any feedback about document 1?
+				<textarea id="txtDoc1Feedback2" name="txtDoc1Feedback1" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				</div>
+				<div>
+				Do you have any feedback about document 2?
+				<textarea id="txtDoc2Feedback2" name="txtDoc2Feedback2" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				</div>
+			</div>
+			<button onclick="recordFinalRatings()" id="btnRatings2">Continue</button>
 		</div>
 		<div id="ExitSurveyDiv">
 			<h2>Part 9 of 9: Exit Survey</h2>
@@ -297,7 +346,7 @@
 			<hr/><br/>
 			Do you have any additional feedback or comments (optional)?
 			<textarea id="txtFeedback" name="txtFeedback" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
-			<button type="button" onclick="recordExitSurvey()" id="btnExitFinish">Finish!</button>
+			<button onclick="recordExitSurvey()" id="btnExitFinish">Finish!</button>
 		</div>
 		<div id="GoodbyeDiv">
 			<h2>Thank You!</h2>
@@ -309,14 +358,14 @@
 			<tr>
 				<td>
 				<h3>Document #1</h3>
-				<div id="FirstResultTextExit" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll"></div>
+				<div id="FirstResultTextExit" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
 				<br/>
-					<button type="button" onclick="copyDoc1()" id="btnExitFinish">Copy to Clipbord</button>
+					<button onclick="copyDoc1()" id="btnExitFinish">Copy to Clipbord</button>
 				</td><td>
 				<h3>Document #2</h3>
-				<div id="SecondResultTextExit" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll"></div>
+				<div id="SecondResultTextExit" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
 				<br/>
-					<button type="button" onclick="copyDoc2()" id="btnExitFinish">Copy to Clipbord</button>
+					<button onclick="copyDoc2()" id="btnExitFinish">Copy to Clipbord</button>
 				</td>
 			</tr>
 			</table>
@@ -380,6 +429,7 @@ var ConnectingDiv = document.getElementById("ConnectingDiv");
 var ScreenerDiv = document.getElementById("ScreenerDiv");
 var RejectedDiv = document.getElementById("RejectedDiv");
 var RefiningDiv = document.getElementById("RefiningDiv");
+var FinalResultDiv = document.getElementById("FinalResultDiv");
 
 var refinementsRemainingDoc1 = 3;
 var refinementsRemainingDoc2 = 3;
@@ -412,6 +462,7 @@ function hideAll(){
 	ConnectingDiv.hidden = true;
 	ScreenerDiv.hidden = true;
 	RejectedDiv.hidden = true;
+	FinalResultDiv.hidden = true;
 }
 
 /*
@@ -436,7 +487,8 @@ function nextStep(){
 		case 9: PleaseWaitDiv.hidden = false; break; //the please wait screen is shown twice.
 		case 10: FirstResultDiv.hidden = false; break;
 		case 11: RefiningDiv.hidden = false; break;
-		case 12: ExitSurveyDiv.hidden = false; break;
+		case 12: FinalResultDiv.hidden = false; break;
+		case 13: ExitSurveyDiv.hidden = false; break;
 		default: GoodbyeDiv.hidden = false; break;
 	}		
 	//Scroll to the top:
@@ -641,6 +693,7 @@ async function refineDoc1(){
 	Doc1 = document.getElementById("RefiningDoc1");
 	txtFeedback1 = document.getElementById("txtDoc1Refine");
 	myButton1 = document.getElementById("btnRefineDoc1");
+	doneButton = document.getElementById("btnDoneRefining");
 	
 	//input washing on the feedback:
 	strFeedback = txtFeedback1.value;
@@ -651,6 +704,8 @@ async function refineDoc1(){
 	
 	//Disable the button to prevent it being used while the processis happening:
 	myButton1.disabled = true;
+	doneButton.disabled = true;
+	disableNextButton = true;
 	
 	//Display a message on the button and the text window:
 	myButton1.innerHTML = "Please wait ...";
@@ -668,6 +723,7 @@ async function refineDoc1(){
 	Doc1.innerHTML = finalQADoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
 	myButton1.innerHTML = "Refine Document 1 (" + refinementsRemainingDoc1 + " remaining)"
 	myButton1.disabled = false;
+	doneButton.disabled = false;
 	
 	//Save the results.
 	var params = { "SessionID": sessionid, "Instructions": strFeedback, "newDoc":finalQADoc,"UseQuestions":(showQAFirst ? "yes" : "no")}
@@ -687,6 +743,7 @@ async function refineDoc2(){
 	Doc2 = document.getElementById("RefiningDoc2");
 	txtFeedback2 = document.getElementById("txtDoc2Refine");
 	myButton2 = document.getElementById("btnRefineDoc2");
+	doneButton = document.getElementById("btnDoneRefining");
 	
 	//input washing on the feedback:
 	strFeedback2 = txtFeedback2.value;
@@ -697,6 +754,7 @@ async function refineDoc2(){
 	
 	//Disable the button to prevent it being used while the processis happening:
 	myButton2.disabled = true;
+	doneButton.disabled = true;
 	
 	//Display a message on the button and the text window:
 	myButton2.innerHTML = "Please wait ...";
@@ -705,7 +763,7 @@ async function refineDoc2(){
 	
 	//submit the request to OpenAI
 	console.log((showQAFirst ? "yes" : "no"));
-	baselineDoc = await OpenAIConversation(strFeedback, showQAFirst);
+	baselineDoc = await OpenAIConversation(strFeedback2, showQAFirst);
 	
 	//update the counter:
 	refinementsRemainingDoc2 = refinementsRemainingDoc2 - 1;
@@ -714,10 +772,55 @@ async function refineDoc2(){
 	Doc2.innerHTML = baselineDoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
 	myButton2.innerHTML = "Refine Document 2 (" + refinementsRemainingDoc2 + " remaining)"
 	myButton2.disabled = false;
+	doneButton.disabled = false;
 	
 	//Save the results.
 	var params = { "SessionID": sessionid, "Instructions": strFeedback2, "newDoc":baselineDoc,"UseQuestions":(showQAFirst ? "no" : "yes")}
 	await AzureFunction("RecordRefinement",params);	
+}
+/*
+This function is called when the user is done refining the results and ready to proceed to step 8:
+*/
+async function doneRefining(){
+	//Place the final docs in the right controls:
+	Doc1 = document.getElementById("RefiningDoc1").innerHTML;
+	Doc2 = document.getElementById("RefiningDoc2").innerHTML;
+	
+	document.getElementById("FirstResultText2").innerHTML = Doc1;
+	document.getElementById("SecondResultText2").innerHTML = Doc2;
+			
+	FirstResultTextExit.innerHTML = Doc1;
+	SecondResultTextExit.innerHTML = Doc2;
+	
+	//move to the next step:	
+	nextStep();
+}
+/*
+Record results from the documents after the user has finished giving refining prompts:
+*/
+async function recordFinalRatings(){
+	console.log("Recording final ratings ...")
+	btnRatings1.disabled = true;
+	//save to DB:
+	Preference = document.getElementById("prefSlider2").value;
+	Usefulness = document.getElementById("useSlider2").value;
+	FeedbackDoc1 = document.getElementById("txtDoc1Feedback2").value;
+	FeedbackDoc2 = document.getElementById("txtDoc2Feedback2").value;
+		
+	if(showQAFirst){
+		//if QA is shown first, invert the scores. That way positive scores always indicate preference for QA doc.
+		Preference = -Preference;
+		Usefulness = -Usefulness;
+		var params = { "SessionID": sessionid, "Preference": Preference.toString(), "Usefulness":Usefulness.toString(),"BaselineFeedback":FeedbackDoc2,"QAFeedback":FeedbackDoc1}
+		await AzureFunction("RecordFinalRatings",params);
+	}
+	else {
+		var params = { "SessionID": sessionid, "Preference": Preference, "Usefulness":Usefulness,"BaselineFeedback":FeedbackDoc1,"QAFeedback":FeedbackDoc2}
+		await AzureFunction("RecordFinalRatings",params);
+	}
+	//go to the next step:
+	nextStep();
+	console.log("Recorded!")
 }
 /*
 Record results from the exit survey:

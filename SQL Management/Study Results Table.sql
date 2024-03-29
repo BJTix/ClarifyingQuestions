@@ -47,6 +47,12 @@ CREATE TABLE StudyResults (
     RevisedDocBaseline2 VARCHAR(MAX),
     RevisedDocBaseline3 VARCHAR(MAX),
 
+    --Revised Preferences:
+    OverallPreference2 INT NULL, 
+    UsefulnessPreference2 INT NULL, 
+    DocQAFeedback2 VARCHAR(MAX) NULL, 
+    DocBaselineFeedback2 VARCHAR(MAX) NULL,
+
     --Exit Survey
     ExitAnnoying INT,
     ExitEngaged INT,
