@@ -46,13 +46,30 @@ FROM PilotStudyResults
 select top 100 * from ClarifyingQuestionsData
 
 
-select UsefullnessDiff = AVG(QAUsefulness - BaselineUsefulness),
+select UsefullnessDiff = AVG(CAST(QAUsefulness - BaselineUsefulness AS FLOAT)),
     UsefullnessSTDQA = STDEV(QAUsefulness),
     UsefullnessSTDBL = STDEV(QAUsefulness),
-    ClosenessDiff = AVG(QACloseness - BaselineCloseness),
+    ClosenessDiff = AVG(CAST(QACloseness - BaselineCloseness AS FLOAT)),
     ClosenessSTDQA = STDEV(QACloseness),
     ClosenessSTDBL = STDEV(BaselineCloseness),
-    OverallDiff = AVG(QAOverall - BaselineOverall),
+    OverallDiff = AVG(CAST(QAOverall - BaselineOverall AS FLOAT)),
     OverallSTDQA = STDEV(QAOverall),
     OverallSTDBL = STDEV(BaselineOverall)
 from PilotStudyResults
+
+
+SELECT * from PilotStudyResults
+SELECT AVG(LEN(Prompt)+LEN(A1)+LEN(A2)+LEN(A3)) from PilotStudyResults
+
+SELECT * from PromptLog
+
+DROP TABLE IF EXISTS #sums
+SELECT sessionid, promptlen = SUM(LEN(PROMPT)), responselen = SUM(LEN(response)) 
+INTO #sums
+ from PromptLog 
+ where prompt is not null and 264 < sessionid 
+ group BY sessionid
+ 
+
+ select * from #sums
+ select promptlen = AVG(promptlen), responselen = AVG(responselen) from #sums

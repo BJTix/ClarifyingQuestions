@@ -25,17 +25,16 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
         conn = get_conn()
         cursor = conn.cursor()
-        sql = "UPDATE StudyResults SET OverallPreference2 = " + Preference + ", UsefulnessPreference2 = " + Usefulness \
-            + ", DocBaselineFeedback2 = '" + BaselineFeedback + "', DocQAFeedback2 = '" + QAFeedback + "' WHERE SessionID = " + SessionID
+        sql = f"UPDATE StudyResults SET OverallPreference2 = {Preference}, UsefulnessPreference2 = {Usefulness} \
+, DocBaselineFeedback2 = '{BaselineFeedback}', DocQAFeedback2 = '{QAFeedback}' WHERE SessionID = {SessionID}"
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
         logging.error(e)
         if 'sql' in locals(): 
-            #print(sql)
-            return "Error writing to DB! SQL attempted: " + sql
+            return f"Error writing to DB! SQL attempted: {sql}"
         else: return "Error writing to DB! " +  e.message
-    return "DB Write Success for session ID " + SessionID
+    return f"DB Write Success for session ID {SessionID}"
 
 ###################################################################################
 ## Connect to the tixclarifyingquestions database and return the connection object

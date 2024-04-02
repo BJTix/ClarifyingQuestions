@@ -328,6 +328,29 @@
 			</div>
 			<button onclick="recordFinalRatings()" id="btnRatings2">Continue</button>
 		</div>
+		<div id="ResultsAndContinuationDiv">
+			<h2>Part 8 of 9: Results and Continuation</h2>
+			<p>Thank you for completing the study! The documents you have created are provided below for your use. If you would like to keep a copy of the documents you created, you can copy them below. Once you exit the browser or navigate away from this page, you will no longer be able to access these documents.
+			</p>
+			<table>
+			<tr>
+				<td>
+				<h3>Document #1</h3>
+				<div id="FirstResultTextExit" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
+				<br/>
+					<button onclick="copyDoc1()" id="btnExitFinish">Copy to Clipbord</button>
+				</td><td>
+				<h3>Document #2</h3>
+				<div id="SecondResultTextExit" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
+				<br/>
+					<button onclick="copyDoc2()" id="btnExitFinish">Copy to Clipbord</button>
+				</td>
+			</tr>
+			</table>
+			<p>Would you like to create another document, or proceed to the exit survey and exit the study?</p>
+			<button id="btnGoAgain" onClick="goAgain()">Create Another Document</button>
+			<button id="btnExit" onClick="nextStep()">Proceed to Exit Survey</button>
+		</div>
 		<div id="ExitSurveyDiv">
 			<h2>Part 9 of 9: Exit Survey</h2>
 			Thank you for rating the AI’s responses. For the final step in this study, please rate the following statements on a scale of “Strongly Agree” to “Strongly Disagree”.
@@ -358,12 +381,12 @@
 			<tr>
 				<td>
 				<h3>Document #1</h3>
-				<div id="FirstResultTextExit" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
+				<div id="ThankYouDoc1" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
 				<br/>
 					<button onclick="copyDoc1()" id="btnExitFinish">Copy to Clipbord</button>
 				</td><td>
 				<h3>Document #2</h3>
-				<div id="SecondResultTextExit" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
+				<div id="ThankYouDoc2" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
 				<br/>
 					<button onclick="copyDoc2()" id="btnExitFinish">Copy to Clipbord</button>
 				</td>
@@ -391,14 +414,12 @@
 </html>
 <script>
 //Define variables used for prompt, QA, and responses
-var promptNum = 0;
 var questions = "";
 var firstPrompt = "";
 var userAnswers = "";
 var finalQADoc = "";
 var baselineDoc = "";
 var sessionid = 0;
-var intro = "";
 var Q1 = "";
 var Q2 = "";
 var Q3 = "";
@@ -430,6 +451,7 @@ var ScreenerDiv = document.getElementById("ScreenerDiv");
 var RejectedDiv = document.getElementById("RejectedDiv");
 var RefiningDiv = document.getElementById("RefiningDiv");
 var FinalResultDiv = document.getElementById("FinalResultDiv");
+var ResultsAndContinuationDiv = document.getElementById("ResultsAndContinuationDiv");
 
 var refinementsRemainingDoc1 = 3;
 var refinementsRemainingDoc2 = 3;
@@ -442,7 +464,7 @@ console.log("Show QA First: " + (showQAFirst ? "yes" : "no"));
 //Determine which LLM to use
 var LLM = "";
 var rand = Math.random();
-if(rand < 0.5) LLM = "GPT3";
+if(rand < 0.5) LLM = "GPT3.5";
 else LLM = "GPT4"
 
 console.log("LLM: " + LLM);
@@ -463,6 +485,7 @@ function hideAll(){
 	ScreenerDiv.hidden = true;
 	RejectedDiv.hidden = true;
 	FinalResultDiv.hidden = true;
+	ResultsAndContinuationDiv.hidden = true;
 }
 
 /*
@@ -472,9 +495,11 @@ function nextStep(){
 	step++;
 	//Check for a good connection:
 	if(2 == step && 0 < sessionid) step++;
+	//if the user entered no refinements we can skip the re-rating section.
+	if(12 == step && 3 == refinementsRemainingDoc1 && 3 == refinementsRemainingDoc1) step++;
 	//reveal just one div based on the step. Hide the rest.
 	hideAll();
-		
+	//console.log("Proceeding to step " + step);
 	switch(step){
 		case 1: ConsentDiv.hidden = false; break;
 		case 2: ConnectingDiv.hidden = false; break;
@@ -488,7 +513,8 @@ function nextStep(){
 		case 10: FirstResultDiv.hidden = false; break;
 		case 11: RefiningDiv.hidden = false; break;
 		case 12: FinalResultDiv.hidden = false; break;
-		case 13: ExitSurveyDiv.hidden = false; break;
+		case 13: ResultsAndContinuationDiv.hidden = false; break;
+		case 14: ExitSurveyDiv.hidden = false; break;
 		default: GoodbyeDiv.hidden = false; break;
 	}		
 	//Scroll to the top:
@@ -572,7 +598,6 @@ async function btnPrompt(){
 			fullPrompt = "Pick the three most important or insightful elements from the list above and write a list of three insightful questions for the user that will improve the document they want you to generate, based on the issues previously identified. Keep in mind that you will be generating the requested document based on the user's answers, and phrase the questions with this in mind. Format your response as a numbered list of exactly 3 questions."
 			questions = await OpenAIConversation(fullPrompt, false);
 			//Now we need to split the questions up into multiple questions:
-			intro = questions.substring(0, questions.indexOf("\n1") + 1);
 			endIndex = questions.indexOf("\n", questions.indexOf("\n3") + 1);
 			if (endIndex == -1) endIndex = questions.length;
 			Q1 = questions.substring(questions.indexOf("\n1") + 1, questions.indexOf("\n2", questions.indexOf("\n1")));
@@ -788,6 +813,9 @@ async function doneRefining(){
 	
 	document.getElementById("FirstResultText2").innerHTML = Doc1;
 	document.getElementById("SecondResultText2").innerHTML = Doc2;
+	
+	document.getElementById("ThankYouDoc1").innerHTML = Doc1;
+	document.getElementById("ThankYouDoc2").innerHTML = Doc2;
 			
 	FirstResultTextExit.innerHTML = Doc1;
 	SecondResultTextExit.innerHTML = Doc2;
@@ -820,7 +848,72 @@ async function recordFinalRatings(){
 	}
 	//go to the next step:
 	nextStep();
-	console.log("Recorded!")
+	console.log("Recorded!");
+}
+/*
+This function is used for people who want to go again and redo the study.
+*/
+async function goAgain(){
+	//Get a new ID and record the repeat:
+	console.log("Starting a new session...");
+	var params = {"SessionID": sessionid};
+	sessionid = await AzureFunction("RepeatSession",params);
+	console.log("New Session ID: " + sessionid);
+	
+	//Reset Variables:	
+	Doc1 = "";
+	Doc2 = "";
+	refinementsRemainingDoc1 = 3;
+	refinementsRemainingDoc2 = 3;
+	questions = "";
+	firstPrompt = "";
+	userAnswers = "";
+	finalQADoc = "";
+	baselineDoc = "";
+	Q1 = "";
+	Q2 = "";
+	Q3 = "";
+	A1 = "";
+	A2 = "";
+	A3 = "";
+	endIndex = -1;
+	
+	//Reset Controls
+	document.getElementById("FirstResultText2").innerHTML = "";
+	document.getElementById("SecondResultText2").innerHTML = "";
+	FirstResultTextExit.innerHTML = "";
+	SecondResultTextExit.innerHTML = "";
+	document.getElementById("prefSlider").value = 0;
+	document.getElementById("useSlider").value = 0;
+	document.getElementById("prefSlider2").value = 0;
+	document.getElementById("useSlider2").value = 0;
+	document.getElementById("txtDoc1Feedback1").value = "";
+	document.getElementById("txtDoc1Feedback2").value = "";
+	document.getElementById("txtDoc2Feedback1").value = "";
+	document.getElementById("txtDoc2Feedback2").value = "";
+	document.getElementById("txtFeedbackOnQuestions").value = "";
+	document.getElementById("txtA1").value = "";
+	document.getElementById("txtA2").value = "";
+	document.getElementById("txtA3").value = "";
+	document.getElementById("prompt").value = "";
+	document.getElementById("txtDoc2Refine").value = "";
+	document.getElementById("txtDoc1Refine").value = "";
+	btnRatings1.disabled = false;
+		
+	//Redo LLM and QAFirst variables:
+	//Determine which output will be shown first by a coin flip.
+	showQAFirst = false;
+	if(Math.random() < 0.5) showQAFirst = true;
+	console.log("Show QA First: " + (showQAFirst ? "yes" : "no"));
+
+	//Determine which LLM to use
+	if(Math.random() < 0.5) LLM = "GPT3.5";
+	else LLM = "GPT4"
+	console.log("LLM: " + LLM);
+	
+	//Reset the Step
+	step = 5;
+	nextStep();
 }
 /*
 Record results from the exit survey:
@@ -834,7 +927,7 @@ async function recordExitSurvey(){
 	EQ4 = document.getElementById("EQ4").value;
 	Feedback = document.getElementById("txtFeedback").value;
 	params = { "SessionID": sessionid, "ExitAnnoying": EQ1, "ExitEngaged":EQ2,"ExitWilling":EQ3,"ExitTwoOptions":EQ4,"ExitFeedback":Feedback}
-	await AzureFunction("RecordPilotAppExitSurvey",params);
+	await AzureFunction("RecordExitSurvey",params);
 	//go to the next step:
 	nextStep();
 	console.log("Recorded!")

@@ -17,7 +17,7 @@ def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpRe
         LLM = req_body.get('LLM')
         UseQuestions = (req_body.get('UseQuestions') == "yes")
     except:
-        return "Parameter Error!    Usage: {\"prompt\":\"<Prompt Text>\",\"sessionid\":<SessionID>,\"LLM\":\"GPT3\", \"UseQuestions\":\"yes\"}"
+        return "Parameter Error!    Usage: {\"prompt\":\"<Prompt Text>\",\"sessionid\":<SessionID>,\"LLM\":\"GPT3.5\", \"UseQuestions\":\"yes\"}"
 
     Output = CallOpenAI(MyPrompt,SessionID,LLM,UseQuestions)
     return func.HttpResponse(Output, status_code=200)
@@ -98,7 +98,7 @@ def CallOpenAI(prompt,SessionID,LLM,UseQuestions):
 
     #Determine the model to use:
     myModel = ""
-    if LLM == "GPT3": myModel = "gpt-3.5-turbo"
+    if LLM == "GPT3.5": myModel = "gpt-3.5-turbo"
     elif LLM == "GPT4": myModel = "gpt-4-turbo-preview"
     else: myModel = "gpt-3.5-turbo"
 
@@ -121,14 +121,14 @@ def SavePrompt(prompt,SessionID):
         prompt = prompt.replace("'","''") 
         conn = get_conn()
         cursor = conn.cursor()
-        sql = f"EXEC SavePrompt @SessionID = " + SessionID + ", @Prompt = '" + prompt + "'"
+        sql = f"EXEC SavePrompt @SessionID = {SessionID}, @Prompt = '{prompt}'"
         # Table should be created ahead of time in production app.
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
         logging.error(e)
         if 'sql' in locals(): 
-            return "Error writing to DB! SQL attempted: " + sql
+            return f"Error writing to DB! SQL attempted: {sql}"
         else: return e.message
     return "DB Write Success!"
 
@@ -137,7 +137,7 @@ def SaveResponse(response,SessionID):
         response = response.replace("'","''") 
         conn = get_conn()
         cursor = conn.cursor()
-        sql = f"EXEC SaveResponse @SessionID = " + SessionID + ", @Response = '" + response + "'"
+        sql = f"EXEC SaveResponse @SessionID = {SessionID}, @Response = '{response}'"
         # Table should be created ahead of time in production app.
         cursor.execute(sql)
         conn.commit()
@@ -172,7 +172,7 @@ def getConversation(SessionID):
     try:
         conn = get_conn()
         cursor = conn.cursor()
-        sql = f"SELECT * FROM PromptLog WHERE SessionID = " + SessionID + " ORDER BY promptNum"
+        sql = f"SELECT * FROM PromptLog WHERE SessionID = {SessionID} ORDER BY promptNum"
         cursor.execute(sql)
         result = cursor.fetchall()
         #print(result)
