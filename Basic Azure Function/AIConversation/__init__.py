@@ -3,11 +3,15 @@ import openai
 import azure.functions as func
 import pyodbc
 import os
+import google.generativeai as gemini
 
+#Define a global variable to hold th emessage queue. This array will change format depending on if using Gemini or OpenAI
+MessageQueue = []
+LLM = ""
 
 def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-
+    global LLM
     MyPrompt = ""
     SessionID = 0
     try:
@@ -19,13 +23,12 @@ def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpRe
     except:
         return "Parameter Error!    Usage: {\"prompt\":\"<Prompt Text>\",\"sessionid\":<SessionID>,\"LLM\":\"GPT3.5\", \"UseQuestions\":\"yes\"}"
 
-    Output = CallOpenAI(MyPrompt,SessionID,LLM,UseQuestions)
+    Output = CallOpenAI(MyPrompt,SessionID,UseQuestions)
     return func.HttpResponse(Output, status_code=200)
 
 #Get a response from OpenAI
-def CallOpenAI(prompt,SessionID,LLM,UseQuestions):
-    SecretKey = os.getenv('OpenAIKey')
-    openai.api_key = SecretKey
+def CallOpenAI(prompt,SessionID,UseQuestions):
+    global MessageQueue
     SavePrompt(prompt,SessionID)
     
     #Get the Full Conversation
@@ -35,87 +38,104 @@ def CallOpenAI(prompt,SessionID,LLM,UseQuestions):
     StudyRecord = getStudyRecord(SessionID)
     
     #Depending on how far along we are in the process determines how we format the conversation
-    myMessages = []
     #Vary the system message depending on if we are doing question-asking or not:
     if(UseQuestions):
-        myMessages.append({"role": "system", "content": "You are a helpful assistant designed to help users create short, high-quality documents by asking insightful questions to clarify the users needs and make them think about things they have not considered, and then create high-quality professional documents after discussing the details with the user."})
+        addMessage("system", "You are a helpful assistant designed to help users create short, high-quality documents by asking insightful questions to clarify the users needs and make them think about things they have not considered, and then create high-quality professional documents after discussing the details with the user.")
     else:
-        myMessages.append({"role": "system", "content": "You are a helpful assistant designed to help users create short, high-quality professional documents."})
+        addMessage("system", "You are a helpful assistant designed to help users create short, high-quality professional documents.")
 
     #if there is no record, or the questions have not been filled out yet, then we can simply include the full conversation log:
     if (StudyRecord == None or StudyRecord.Q1 == None or StudyRecord.Q1 == ""):
         #format the conversation for ChatGPT parameters
         for row in Conversation:
-            myMessages.append({"role" : "user", "content" : row.prompt})
-            if(row.response != None): myMessages.append({"role" : "assistant", "content" : row.response})
+            if(row.prompt != None): addMessage("user", row.prompt)
+            if(row.response != None): addMessage("assistant", row.response)
     
     else:
         #if the questions have been filled out, then we need to format the conversation to include the questions and answers. 
         #We are manually overwriting the way the conversation has actually played out with an idealized version. 
         #However, we only do this if the "UseQuestions" parameter is set to "yes":
-        myMessages.append({"role" : "user", "content" : StudyRecord.Prompt})
+        addMessage("user", StudyRecord.Prompt)
         if (UseQuestions):
-            myMessages.append({"role" : "assistant", "content" : StudyRecord.Q1})
-            myMessages.append({"role" : "user", "content" : StudyRecord.A1})
-            myMessages.append({"role" : "assistant", "content" : StudyRecord.Q2})
-            myMessages.append({"role" : "user", "content" : StudyRecord.A2})
-            myMessages.append({"role" : "assistant", "content" : StudyRecord.Q3})
-            myMessages.append({"role" : "user", "content" : StudyRecord.A3})
+            addMessage("assistant", StudyRecord.Q1)
+            addMessage("user", StudyRecord.A1)
+            addMessage("assistant", StudyRecord.Q2)
+            addMessage("user", StudyRecord.A2)
+            addMessage("assistant", StudyRecord.Q3)
+            addMessage("user", StudyRecord.A3)
         #If there are no documents created yet, add a final prompt instructing the LLM to create the document based on these questions and answers. 
         #This will be the expected prompt at this point. This is only neccessary in the question-inclusive scenario.
-        if(StudyRecord.DocQA == None or StudyRecord.DocQA == ""): myMessages.append({"role" : "system", "content" : prompt})
+        if(StudyRecord.DocQA == None or StudyRecord.DocQA == ""): addMessage("system", prompt)
 
         #After the documents are created, we are doing revisions. So, we will want to include the idealized conversation up to this point, 
         #and then the actual rows of conversation after the documents were created.
         #We need to determine which document to use:
         else:
             if(UseQuestions):
-                myMessages.append({"role" : "assistant", "content" : StudyRecord.DocQA})
+                addMessage("assistant", StudyRecord.DocQA)
                 if(StudyRecord.RevisionPromptQA1 != None and StudyRecord.RevisionPromptQA1 != ""):  
-                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA1})
-                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocQA1})
+                    addMessage("user", StudyRecord.RevisionPromptQA1)
+                    addMessage("assistant", StudyRecord.RevisedDocQA1)
                 if(StudyRecord.RevisionPromptQA2 != None and StudyRecord.RevisionPromptQA2 != ""):  
-                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA2})
-                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocQA2})
+                    addMessage("user", StudyRecord.RevisionPromptQA2)
+                    addMessage("assistant", StudyRecord.RevisedDocQA2)
                 if(StudyRecord.RevisionPromptQA3 != None and StudyRecord.RevisionPromptQA3 != ""):  
-                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptQA3})
-                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocQA3})
+                    addMessage("user", StudyRecord.RevisionPromptQA3)
+                    addMessage("assistant", StudyRecord.RevisedDocQA3)
             else:
-                myMessages.append({"role" : "assistant", "content" : StudyRecord.DocBaseline})
+                addMessage("assistant", StudyRecord.DocBaseline)
                 if(StudyRecord.RevisionPromptBaseline1 != None and StudyRecord.RevisionPromptBaseline1 != ""):  
-                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline1})
-                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocBaseline1})
+                    addMessage("user", StudyRecord.RevisionPromptBaseline1)
+                    addMessage("assistant", StudyRecord.RevisedDocBaseline1)
                 if(StudyRecord.RevisionPromptBaseline2 != None and StudyRecord.RevisionPromptBaseline2 != ""):  
-                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline2})
-                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocBaseline2})
+                    addMessage("user", StudyRecord.RevisionPromptBaseline2)
+                    addMessage("assistant", StudyRecord.RevisedDocBaseline2)
                 if(StudyRecord.RevisionPromptBaseline3 != None and StudyRecord.RevisionPromptBaseline3 != ""):  
-                    myMessages.append({"role" : "user", "content" : StudyRecord.RevisionPromptBaseline3})
-                    myMessages.append({"role" : "assistant", "content" : StudyRecord.RevisedDocBaseline3})
+                    addMessage("user", StudyRecord.RevisionPromptBaseline3)
+                    addMessage("assistant", StudyRecord.RevisedDocBaseline3)
             #Added in this system message, since GPT3.5 was not re-writing the document, but only addressing the latest thing the user asked for.
-            myMessages.append({"role" : "system", "content" : "The user has provided some additional feedback. Please re-write the entire document, modifying the original based on this new feedback"})
-            myMessages.append({"role" : "user", "content" : prompt})
+            addMessage("system", "The user has provided some additional feedback. Please re-write the entire document, modifying the original based on this new feedback")
+            addMessage("user", prompt)
 
 
+    global LLM
     #Determine the model to use:
     myModel = ""
     if LLM == "GPT3.5": myModel = "gpt-3.5-turbo"
     elif LLM == "GPT4": myModel = "gpt-4-turbo-preview"
+    elif LLM == "Gemini": myModel = "gemini-pro"
     else: myModel = "gpt-3.5-turbo"
 
-    #Call OpenAI
-    client = openai.OpenAI(api_key =  SecretKey)
-    response = client.chat.completions.create(
-        model = myModel
-        , messages = myMessages
-    )
+    #get a response from the AI:
+    response = ""
+    responseMessage = ""
 
-    #Extract the response:
-    responseMessage = response.choices[0].message.content
+    #Call OpenAI
+    if(LLM == "GPT3.5" or LLM == "GPT4"):
+        openai.api_key = os.getenv('OpenAIKey')
+        #client = openai.OpenAI(api_key =  SecretKey)
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
+            model = myModel
+            , messages = MessageQueue
+        )
+        #Extract the response:
+        responseMessage = response.choices[0].message.content
+    elif(LLM == "Gemini"):
+        gemini.configure(api_key = os.getenv('GeminiKey'))
+        client = gemini.GenerativeModel('models/gemini-pro')
+        response = client.generate_content(MessageQueue)
+        responseMessage = response.parts[0].text
+
     #Save the response to the db
     SaveResponse(responseMessage,SessionID)
     #Return the response
     return responseMessage
 
+    
+###################################################################################
+## Save the prompt and response to the database
+###################################################################################
 def SavePrompt(prompt,SessionID):
     try:
         prompt = prompt.replace("'","''") 
@@ -203,3 +223,29 @@ def getStudyRecord(SessionID):
             #print(sql)
             return "Error getting study results! Error: " + str(e)
         else: return "Error writing to DB! SQL variable never initialized."
+
+        
+###################################################################################
+## A function to add a new message to the queue. 
+## Formats the message differently according to the LLM being used.
+###################################################################################
+def addMessage(Role, Message):
+    global MessageQueue
+    global LLM
+    #input washing:
+    if(Message == None): return MessageQueue
+    if LLM == "GPT3.5":
+        MessageQueue.append({"role": Role, "content": Message})
+    elif LLM == "GPT4":
+        MessageQueue.append({"role": Role, "content": Message})
+    elif LLM == "Gemini":
+        newRole = ""
+        if(Role == "assistant"): newRole = "model"
+        if(Role == "system"): return MessageQueue #Gemini does not suport systems messages. May need to find a better way to do this. #newRole = "user"
+        if(Role == "user"): newRole = "user"
+        MessageQueue.append({"role": newRole, "parts": [Message]})
+        #if(Role == "system"): MessageQueue.append({"role": "model", "parts": ["OK!"]})
+    else:
+        MessageQueue.append({"role": Role, "content": Message})
+
+    return MessageQueue
