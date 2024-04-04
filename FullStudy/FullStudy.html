@@ -356,16 +356,19 @@
 			Thank you for rating the AI’s responses. For the final step in this study, please rate the following statements on a scale of “Strongly Agree” to “Strongly Disagree”.
 			<hr/>
 			It was annoying to have to answer questions even though I had already explained what I wanted the AI to do.
-			<br/>Strongly Disagree <input type="range" id="EQ1" min="0" max="5" /> Strongly Agree
+			<br/>Strongly Disagree <input type="range" id="EQ1" min="0" max="10" /> Strongly Agree
 			<hr/>
 			I felt like the AI was more engaged with my problem because it asked follow-up questions.
-			<br/>Strongly Disagree <input type="range" id="EQ2" min="0" max="5" /> Strongly Agree
+			<br/>Strongly Disagree <input type="range" id="EQ2" min="0" max="10" /> Strongly Agree
 			<hr/>
 			I would be willing to answer follow-up questions from an AI if answering questions led to better results.
-			<br/>Strongly Disagree <input type="range" id="EQ3" min="0" max="5" /> Strongly Agree
+			<br/>Strongly Disagree <input type="range" id="EQ3" min="0" max="10" /> Strongly Agree
 			<hr/>
 			I liked that the AI showed me two options to pick between, instead of only picking the option it thought was best.
-			<br/>Strongly Disagree <input type="range" id="EQ4" min="0" max="5" /> Strongly Agree
+			<br/>Strongly Disagree <input type="range" id="EQ4" min="0" max="10" /> Strongly Agree
+			<hr/>
+			Answering the questions asked by the AI made me think about my request in ways I hadn’t previously considered. 
+			<br/>Strongly Disagree <input type="range" id="EQ5" min="0" max="10" /> Strongly Agree
 			<hr/><br/>
 			Do you have any additional feedback or comments (optional)?
 			<textarea id="txtFeedback" name="txtFeedback" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
@@ -925,8 +928,9 @@ async function recordExitSurvey(){
 	EQ2 = document.getElementById("EQ2").value;
 	EQ3 = document.getElementById("EQ3").value;
 	EQ4 = document.getElementById("EQ4").value;
+	EQ5 = document.getElementById("EQ5").value;
 	Feedback = document.getElementById("txtFeedback").value;
-	params = { "SessionID": sessionid, "ExitAnnoying": EQ1, "ExitEngaged":EQ2,"ExitWilling":EQ3,"ExitTwoOptions":EQ4,"ExitFeedback":Feedback}
+	params = { "SessionID": sessionid,"ExitAnnoying": EQ1,"ExitEngaged":EQ2,"ExitWilling":EQ3,"ExitTwoOptions":EQ4,"ExitMadeMeThink":EQ5,"ExitFeedback":Feedback }
 	await AzureFunction("RecordExitSurvey",params);
 	//go to the next step:
 	nextStep();

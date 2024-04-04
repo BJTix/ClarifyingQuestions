@@ -60,6 +60,7 @@ CREATE TABLE StudyResults (
     ExitTwoOptions INT,
     ExitFeedback VARCHAR(MAX),
     CompletedAt DATETIME,
+    ExitMadeMeThink INT,
 
     PreviousSession INT
 )

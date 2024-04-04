@@ -19,6 +19,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         ExitWilling = req_body.get('ExitWilling')
         ExitTwoOptions = req_body.get('ExitTwoOptions')
         ExitFeedback = req_body.get('ExitFeedback')
+        ExitMadeMeThink = req_body.get('ExitMadeMeThink')
 
     #input washing:
     ExitFeedback = ExitFeedback.replace("'", "''")
@@ -27,7 +28,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         conn = get_conn()
         cursor = conn.cursor()
         sql = f"UPDATE StudyResults SET ExitAnnoying = {ExitAnnoying}, ExitEngaged = {ExitEngaged}, ExitWilling = {ExitWilling}\
-, ExitTwoOptions = {ExitTwoOptions}, ExitFeedback = '{ExitFeedback}', CompletedAt = GETDATE() WHERE SessionID = {SessionID}"
+, ExitTwoOptions = {ExitTwoOptions}, ExitFeedback = '{ExitFeedback}', ExitMadeMeThink = '{ExitMadeMeThink}', CompletedAt = GETDATE() WHERE SessionID = {SessionID}"
         cursor.execute(sql)
         conn.commit()
     except Exception as e:
@@ -48,7 +49,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             conn = get_conn()
             cursor = conn.cursor()
             sql = f"UPDATE StudyResults SET ExitAnnoying = {ExitAnnoying}, ExitEngaged = {ExitEngaged}, ExitWilling = {ExitWilling}\
-, ExitTwoOptions = {ExitTwoOptions}, ExitFeedback = '{ExitFeedback}', CompletedAt = GETDATE() WHERE SessionID = {oldRecord.PreviousSession}"
+, ExitTwoOptions = {ExitTwoOptions}, ExitFeedback = '{ExitFeedback}', ExitMadeMeThink = '{ExitMadeMeThink}', CompletedAt = GETDATE() WHERE SessionID = {oldRecord.PreviousSession}"
             cursor.execute(sql)
             conn.commit()
         except Exception as e:
