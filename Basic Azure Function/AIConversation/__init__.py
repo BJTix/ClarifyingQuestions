@@ -23,12 +23,23 @@ def main(req: func.HttpRequest, toDoItems: func.Out[func.SqlRow]) -> func.HttpRe
     except:
         return "Parameter Error!    Usage: {\"prompt\":\"<Prompt Text>\",\"sessionid\":<SessionID>,\"LLM\":\"GPT3.5\", \"UseQuestions\":\"yes\"}"
 
-    Output = CallOpenAI(MyPrompt,SessionID,UseQuestions)
-    return func.HttpResponse(Output, status_code=200)
+    try:
+        Output = CallAI(MyPrompt,SessionID,UseQuestions)
+        return func.HttpResponse(Output, status_code=200)
+    except Exception as e:
+        logging.error(e)
+        messageStack = "";
+        for message in MessageQueue:
+            if(LLM == "Gemini"):
+                messageStack += "{ role: " + message["role"] + ", parts[0]: \"" + message["parts"][0] + "\" }\n"
+            else:
+                messageStack += "{ role: " + message["role"] + ", content: \"" + message["content"] + "\" }\n"
+        return func.HttpResponse(f"Error! {str(e)}\nSession ID: {str(SessionID)}\nPrompt: \"{MyPrompt}\"\nMessages sent: \n{messageStack}", status_code=200)
 
 #Get a response from OpenAI
-def CallOpenAI(prompt,SessionID,UseQuestions):
+def CallAI(prompt,SessionID,UseQuestions):
     global MessageQueue
+    MessageQueue = []
     SavePrompt(prompt,SessionID)
     
     #Get the Full Conversation
@@ -46,7 +57,7 @@ def CallOpenAI(prompt,SessionID,UseQuestions):
 
     #if there is no record, or the questions have not been filled out yet, then we can simply include the full conversation log:
     if (StudyRecord == None or StudyRecord.Q1 == None or StudyRecord.Q1 == ""):
-        #format the conversation for ChatGPT parameters
+        #Add in each line of the conversation that has occurred so far:
         for row in Conversation:
             if(row.prompt != None): addMessage("user", row.prompt)
             if(row.response != None): addMessage("assistant", row.response)
@@ -63,9 +74,13 @@ def CallOpenAI(prompt,SessionID,UseQuestions):
             addMessage("user", StudyRecord.A2)
             addMessage("assistant", StudyRecord.Q3)
             addMessage("user", StudyRecord.A3)
+       
         #If there are no documents created yet, add a final prompt instructing the LLM to create the document based on these questions and answers. 
         #This will be the expected prompt at this point. This is only neccessary in the question-inclusive scenario.
-        if(StudyRecord.DocQA == None or StudyRecord.DocQA == ""): addMessage("system", prompt)
+        if(StudyRecord.DocQA == None or StudyRecord.DocQA == ""): 
+            if(UseQuestions):
+                addMessage("assistant", "Thank you for your answers. I will now create a document based on the questions and answers you have provided. Do you have any further instructions?")
+                addMessage("user", prompt)
 
         #After the documents are created, we are doing revisions. So, we will want to include the idealized conversation up to this point, 
         #and then the actual rows of conversation after the documents were created.
@@ -94,8 +109,7 @@ def CallOpenAI(prompt,SessionID,UseQuestions):
                     addMessage("user", StudyRecord.RevisionPromptBaseline3)
                     addMessage("assistant", StudyRecord.RevisedDocBaseline3)
             #Added in this system message, since GPT3.5 was not re-writing the document, but only addressing the latest thing the user asked for.
-            addMessage("system", "The user has provided some additional feedback. Please re-write the entire document, modifying the original based on this new feedback")
-            addMessage("user", prompt)
+            addMessage("user", f"The user has provided some additional feedback. Please re-write the entire document, modifying the original based on this new feedback: \"{prompt}\"")
 
 
     global LLM
@@ -112,20 +126,35 @@ def CallOpenAI(prompt,SessionID,UseQuestions):
 
     #Call OpenAI
     if(LLM == "GPT3.5" or LLM == "GPT4"):
-        openai.api_key = os.getenv('OpenAIKey')
-        #client = openai.OpenAI(api_key =  SecretKey)
-        client = openai.OpenAI()
-        response = client.chat.completions.create(
-            model = myModel
-            , messages = MessageQueue
-        )
-        #Extract the response:
-        responseMessage = response.choices[0].message.content
+        SecretKey = os.getenv('OpenAIKey')
+        openai.api_key = SecretKey
+        client = openai.OpenAI(api_key = SecretKey)
+        try:
+            response = client.chat.completions.create(
+                model = myModel
+                , messages = MessageQueue
+            )
+            #Extract the response:
+            responseMessage = response.choices[0].message.content
+        except Exception as e:
+            logging.error(e)
+            responseMessage = "Error getting a response from OpenAI! " + str(e)
+
     elif(LLM == "Gemini"):
         gemini.configure(api_key = os.getenv('GeminiKey'))
-        client = gemini.GenerativeModel('models/gemini-pro')
-        response = client.generate_content(MessageQueue)
-        responseMessage = response.parts[0].text
+        #Gemini is not as reliable as OpenAI, and sometimes simply fails to return a result. So, we will try up to 3 times:
+        tries = 3
+        error = True
+        while (tries > 0 and error):
+            try:
+                client = gemini.GenerativeModel('models/gemini-pro')
+                response = client.generate_content(MessageQueue)
+                responseMessage = response.text
+                error = False
+            except Exception as e:
+                logging.error(e)
+                responseMessage = "Error getting a response from Gemini! " + str(e)
+                tries -= 1
 
     #Save the response to the db
     SaveResponse(responseMessage,SessionID)
@@ -234,18 +263,16 @@ def addMessage(Role, Message):
     global LLM
     #input washing:
     if(Message == None): return MessageQueue
-    if LLM == "GPT3.5":
-        MessageQueue.append({"role": Role, "content": Message})
-    elif LLM == "GPT4":
+    if LLM == "GPT3.5" or LLM == "GPT4":
         MessageQueue.append({"role": Role, "content": Message})
     elif LLM == "Gemini":
         newRole = ""
         if(Role == "assistant"): newRole = "model"
-        if(Role == "system"): return MessageQueue #Gemini does not suport systems messages. May need to find a better way to do this. #newRole = "user"
+        if(Role == "system"): newRole = "user" #return MessageQueue #Gemini does not suport systems messages. May need to find a better way to do this. # 
         if(Role == "user"): newRole = "user"
         MessageQueue.append({"role": newRole, "parts": [Message]})
-        #if(Role == "system"): MessageQueue.append({"role": "model", "parts": ["OK!"]})
+        if(Role == "system"): MessageQueue.append({"role": "model", "parts": ["OK!"]})
     else:
         MessageQueue.append({"role": Role, "content": Message})
 
-    return MessageQueue
+    #return MessageQueue

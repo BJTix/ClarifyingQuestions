@@ -154,7 +154,7 @@
 			This study is only open to participants who are over the age of 18 and fluent in English. Please answer the questions below to continue.
 			<form action="javascript:btnScreenerContinue()">
 				<ul>
-					<li><label for="Age">Age:</label><input id="Age" name="Age" type="number" min="1" max="100"/></li>
+					<li><label for="Age">Age: </label><input id="Age" name="Age" type="number" min="1" max="100"/></li>
 					<li> 
 						<label for="English">Is English your primary spoken language?</label>
 						<select name="English" id="English">
@@ -467,7 +467,9 @@ console.log("Show QA First: " + (showQAFirst ? "yes" : "no"));
 //Determine which LLM to use
 var LLM = "";
 var rand = Math.random();
-if(rand < 0.5) LLM = "GPT3.5";
+//rand = 0;
+if(rand < 0.333) LLM = "Gemini";
+else if(rand < 0.666) LLM = "GPT3.5";
 else LLM = "GPT4"
 
 console.log("LLM: " + LLM);
@@ -597,9 +599,9 @@ async function btnPrompt(){
 			//This one takes us to a "please wait" screen.
 			nextStep();
 			fullPrompt = "A user is requesting the creation of a new document. This is their request:\nuser:\"" + firstPrompt + "\"\nIdentify any areas of significant ambiguity in the prompt, areas that could benefit from more thought or attention from the user, or helpful tips the user may not have considered. Write these out in a short list."
-			var ambiguity = await OpenAIConversation(fullPrompt, false);
-			fullPrompt = "Pick the three most important or insightful elements from the list above and write a list of three insightful questions for the user that will improve the document they want you to generate, based on the issues previously identified. Keep in mind that you will be generating the requested document based on the user's answers, and phrase the questions with this in mind. Format your response as a numbered list of exactly 3 questions."
-			questions = await OpenAIConversation(fullPrompt, false);
+			var ambiguity = await AIConversation(fullPrompt, false);
+			fullPrompt = "Pick the three most important items from the list you just generated, and write a list of three insightful questions that will improve the requested document. Phrase the questions as direct questions to the user. Format your response as a numbered list of exactly 3 questions."
+			questions = await AIConversation(fullPrompt, false);
 			//Now we need to split the questions up into multiple questions:
 			endIndex = questions.indexOf("\n", questions.indexOf("\n3") + 1);
 			if (endIndex == -1) endIndex = questions.length;
@@ -645,8 +647,8 @@ async function btnQA(){
 		//Submit these answers to the AI:
 		QAPrompt = "Generate a high quality document that meets the users needs, considering both their initial prompt and the answers they gave when asked for details. Include creative original insights that will improve the quality of the document but do not deviate too far from the user's original intent.";
 		//We need both the final QA doc as well as a baseline to compare to:
-		finalQADoc = await OpenAIConversation(QAPrompt, true);
-		baselineDoc = await OpenAIConversation(firstPrompt, false);
+		finalQADoc = await AIConversation(QAPrompt, true);
+		baselineDoc = await AIConversation(firstPrompt, false);
 		var finalQADocHTML = finalQADoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
 		var baselineDocHTML = baselineDoc.replace(/(?:\r\n|\r|\n)/g,"</br>");
 		if(showQAFirst) {
@@ -742,7 +744,7 @@ async function refineDoc1(){
 	
 	//submit the request to OpenAI
 	console.log((showQAFirst ? "yes" : "no"));
-	finalQADoc = await OpenAIConversation(strFeedback, showQAFirst);
+	finalQADoc = await AIConversation(strFeedback, showQAFirst);
 	
 	//update the counter:
 	refinementsRemainingDoc1 = refinementsRemainingDoc1 - 1;
@@ -791,7 +793,7 @@ async function refineDoc2(){
 	
 	//submit the request to OpenAI
 	console.log((showQAFirst ? "yes" : "no"));
-	baselineDoc = await OpenAIConversation(strFeedback2, showQAFirst);
+	baselineDoc = await AIConversation(strFeedback2, !showQAFirst);
 	
 	//update the counter:
 	refinementsRemainingDoc2 = refinementsRemainingDoc2 - 1;
@@ -910,10 +912,13 @@ async function goAgain(){
 	console.log("Show QA First: " + (showQAFirst ? "yes" : "no"));
 
 	//Determine which LLM to use
-	if(Math.random() < 0.5) LLM = "GPT3.5";
+	var rand = Math.random();
+	//rand = 0;
+	if(rand < 0.333) LLM = "Gemini";
+	else if(rand < 0.666) LLM = "GPT3.5";
 	else LLM = "GPT4"
-	console.log("LLM: " + LLM);
-	
+	console.log(LLM);
+
 	//Reset the Step
 	step = 5;
 	nextStep();
@@ -1006,20 +1011,10 @@ async function getSessionID_inner(retries){
 /*
 Make a call to the OpenAI API Azure Function that I have set up ahead of time.
 */
-async function OpenAIConversation(prompt, useQuestions){
+async function AIConversation(prompt, useQuestions){
 	console.log("OpenAI Conversation Prompt: " + prompt)
 	var params = {"prompt": prompt, "sessionid": sessionid, "LLM": LLM,"UseQuestions":(useQuestions ? "yes" : "no")};
-	var response = await AzureFunction("OpenAIConversation",params);
-	//console.log("Response: " + response);
-	return response;
-}
-/*
-Make a call to the OpenAI API Azure Function that I have set up ahead of time.
-*/
-async function OpenAIPrompt(prompt){
-	console.log("OpenAI Prompt: " + prompt)
-	var params = {"prompt": prompt, "sessionid": sessionid};
-	var response = await AzureFunction("OpenAIPromptResponse",params);
+	var response = await AzureFunction("AIConversation",params);
 	//console.log("Response: " + response);
 	return response;
 }
