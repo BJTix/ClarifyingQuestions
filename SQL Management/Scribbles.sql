@@ -58,9 +58,15 @@ UPDATE StudyResults SET Prompt = 'Write an essay on the topic of chivalry in 14t
 Select * FROM StudyResults where SessionID in (430,431)
 Select * FROM StudyResults where PreviousSession = 412
 Select * FROM PilotStudyResults where SessionID = 353
+Select * FROM StudyResults where SessionID = 445
 
-Select * from PromptLog where sessionid = 359
-Delete PromptLog where sessionid = 358
+UPDATE StudyResults SET DocQA = NULL, DocBaseline = NULL where SessionID = 445
+
+Select * from PromptLog where sessionid = 445
+Delete PromptLog where sessionid = 445 and promptNum = 4
+Delete PromptLog where sessionid = 432
+
+UPDATE PromptLog set prompt = NULL, promptTime = NULL where sessionid = 432
 
 exec ReserveSessionID
 
@@ -71,6 +77,8 @@ UPDATE StudyResults SET OverallPreference = -3, UsefulnessPreference = -3, DocBa
 
 ALTER TABLE StudyResults ADD OverallPreference2 INT NULL, UsefulnessPreference2 INT NULL, DocQAFeedback2 VARCHAR(MAX) NULL, DocBaselineFeedback2 VARCHAR(MAX) NULL
 ALTER TABLE StudyResults ADD PreviousSession INT NULL
+ALTER TABLE StudyResults ADD ExitMadeMeThink INT NULL
+ALTER TABLE StudyResults ADD BadData BIT NULL
 
 
 INSERT INTO StudyResults (SessionID, ConsentSigned, PreviousSession, Age, Gender, ExperienceLevel, EnglishPrimary) VALUES (402,'2024-03-26 06:08:32',382,35,'Female',2,'Y')

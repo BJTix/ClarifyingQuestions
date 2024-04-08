@@ -62,5 +62,9 @@ CREATE TABLE StudyResults (
     CompletedAt DATETIME,
     ExitMadeMeThink INT,
 
-    PreviousSession INT
+    --Previous session, used to ttrack if user chose to make a second document.
+    PreviousSession INT,
+
+    --Bad data bit, used to track data that has to be discarded.
+    BadData BIT NULL
 )

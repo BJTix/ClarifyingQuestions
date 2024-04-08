@@ -82,6 +82,7 @@
 	.grid-container > div {
 	  padding: 20px 0;
 	  border: 1px solid #ccc;
+	  font: 16px Georgia, Garamond, Serif;
 	}
 
 	.grid-full {
@@ -91,12 +92,18 @@
 	
 	.text-div{	
 		overflow:auto;
-	  -webkit-user-select: all; /* for Safari */
-	  user-select: all;
+		-webkit-user-select: all; /* for Safari */
+		user-select: all;
+		min-height:150px;
+		max-height:500px
+	}
+
+	textarea{
+		font: 16px Georgia, Garamond, Serif;
 	}
 	</style>
 	</head>
-	<div style="height:8%;left:5%; width:90%; vertical-align:middle;position:relative;color:#002315">
+	<div style="height:55px;left:5%; width:90%; vertical-align:middle;position:relative;color:#002315">
 		<h1><img src="ConsentLogo.png" style="height:50;width:100;"/>
 		        Clarifying Questions Study</h1>
 	</div>
@@ -107,7 +114,7 @@
 			<h2>University of Hawai‘i Online Survey Consent Form</h2>
 			Aloha! You are invited to participate in a research study conducted by Bernadette Tix from the Department of Information and Computer Science at the University of Hawai‘i. This research project is a part of a PhD Dissertation studying document creation by Artificial Intelligence programs.
 			</br></br>
-			<div style="position:relative;left:10%;width:80%;height:50%;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;" id="ConsentScroll">
+			<div style="position:relative;left:10%;width:80%;height:50%;border:1px solid #ccc;overflow: auto;" id="ConsentScroll">
 				<h3>What am I being asked to do?</h3>
 				If you participate in this project, you will be asked to fill out a survey, as well as engage in a back-and-forth conversation with an AI chatbot about creating a document for your personal use, such as a letter, memo, or email. 				
 				<h3>Taking part in this study is your choice.</h3>
@@ -130,18 +137,19 @@
 				<h3>Future Research Studies: </h3>
 				The data from this study will not be used or distributed for future research studies.  
 			</div>
-			Questions: If you have any questions about this study, please email me at bjavery@hawaii.edu You may also contact my advisor, Dr. Kimberly Binsted, at binsted@hawaii.edu
-			</br></br>
-			You may contact the UH Human Studies Program at 808.956.5007 or uhirb@hawaii.edu to discuss problems, concerns and questions, obtain information, or offer input with an informed individual who is unaffiliated with the specific research protocol. Please visit <a href="http://go.hawaii.edu/jRd">http://go.hawaii.edu/jRd</a> for more information on your rights as a research participant.  
-			</br></br>
-			If you agree to participate in this project, please give electronic consent by checking the box below:
-			</br></br>
-			<form action="javascript:btnConsentSubmit()">
-			  <input type="checkbox" id="chkConsent" name="chkConsent" value="Yes">
-			  <label for="chkConsent"> <strong>YES</strong> I agree to participate in this study.</label><br>
-			  <button>Continue</button>
-			</form>
-
+			
+			<p>Questions: If you have any questions about this study, please email me at bjavery@hawaii.edu</p>
+			<p> You may also contact my advisor, Dr. Kimberly Binsted, at binsted@hawaii.edu</p>
+			<p>You may contact the UH Human Studies Program at 808.956.5007 or uhirb@hawaii.edu to discuss problems, concerns and questions, obtain information, or offer input with an informed individual who is unaffiliated with the specific research protocol. Please visit <a href="http://go.hawaii.edu/jRd">http://go.hawaii.edu/jRd</a> for more information on your rights as a research participant.</p>
+			
+			<p>If you agree to participate in this project, please give electronic consent by checking the box below:</p>
+			<p>
+				<form action="javascript:btnConsentSubmit()">
+					<input type="checkbox" id="chkConsent" name="chkConsent" value="Yes">
+					<label for="chkConsent"> <strong>YES</strong> I agree to participate in this study.</label><br>
+					<button>Continue</button>
+				</form>
+			</p>
 		</div>
 		
 		<div id="ConnectingDiv">
@@ -210,7 +218,7 @@
 			<li>“I want to reach out to a friend I haven’t spoken to in a while. Give me an outline for a letter to help me figure out what I should say.”</li>
 			</ul></em>
 			<h3>Enter your prompt below:</h3>
-			<textarea id="prompt" name="txt_prompt" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea>
+			<textarea id="prompt" name="txt_prompt" rows="5" style="width:80%"></textarea>
 			<br/>
 			<button onclick="btnPrompt()" id="btn_Prompt">Continue</button>
 			
@@ -224,14 +232,14 @@
 			To give you the best results, the AI would like to ask you a few questions about the document you need. Please provide your answers and then click "continue."
 			<h3>Questions:</h3>
 			<label for="txtA1" id="lblQ1"></label><br/>
-			<textarea id="txtA1" name="txtA1" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
+			<textarea id="txtA1" name="txtA1" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
 			<label for="txtA2" id="lblQ2"></label><br/>
-			<textarea id="txtA2" name="txtA2" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
+			<textarea id="txtA2" name="txtA2" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
 			<label for="txtA3" id="lblQ3"></label><br/>
-			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/><br/>
+			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
 			<div>
 			Would you like to provide any thoughts or feedback about these questions?
-			<textarea id="txtFeedbackOnQuestions" name="txtFeedbackOnQuestions" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+			<textarea id="txtFeedbackOnQuestions" name="txtFeedbackOnQuestions" rows="5" style="width:80%"></textarea><br/>
 			</div>
 			<button onclick="btnQA()" id="btnQA">Continue</button>
 		</div>
@@ -239,8 +247,8 @@
 			<h2>Part 5 of 9: Rating the Douments</h2>
 			Thank you for your thoughtful answers! The AI has considered your prompt and your responses to its questions, and has generated two different possible documents for you. Please read each one and answer the questions that follow. <br/><br/>
 			<div class="grid-container">
-				<div class="text-div" id="FirstResultText" style="min-height:150px;max-height:500px"></div>
-				<div class="text-div" id="SecondResultText" style="min-height:150px;max-height:500px"></div>
+				<div class="text-div" id="FirstResultText"></div>
+				<div class="text-div" id="SecondResultText"></div>
 				<div class="grid-full">
 					<center><strong>
 					Which document do you prefer overall? <br/>
@@ -263,11 +271,11 @@
 				</div>
 				<div>
 				Do you have any feedback about document 1?
-				<textarea id="txtDoc1Feedback1" name="txtDoc1Feedback1" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				<textarea id="txtDoc1Feedback1" name="txtDoc1Feedback1" rows="5" style="width:95%"></textarea><br/>
 				</div>
 				<div>
 				Do you have any feedback about document 2?
-				<textarea id="txtDoc2Feedback1" name="txtDoc2Feedback2" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				<textarea id="txtDoc2Feedback1" name="txtDoc2Feedback2" rows="5" style="width:95%"></textarea><br/>
 				</div>
 			</div>
 			<button onclick="recordInitialRatings()" id="btnRatings1">Continue</button>
@@ -276,16 +284,16 @@
 			<h2>Part 6 of 9: Refining the Douments</h2>
 			Documents generated by AI can sometimes be improved by giving the AI further instructions after it has completed its initial attempt. If you would like to refine one or both of these documents, enter further instructions below. Please try to get each document as close as you can to a document you would actually want to use. <br/><br/>
 			<div class="grid-container">
-				<div class="text-div" id="RefiningDoc1" style="min-height:150px;max-height:500px"></div>
-				<div class="text-div" id="RefiningDoc2" style="min-height:150px;max-height:500px"></div>
+				<div class="text-div" id="RefiningDoc1"></div>
+				<div class="text-div" id="RefiningDoc2"></div>
 				<div>
 				Enter additional instructions for document 1 below:
-				<textarea id="txtDoc1Refine" name="txtDoc1Refine" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				<textarea id="txtDoc1Refine" name="txtDoc1Refine" rows="5" style="width:95%"></textarea><br/>
 				<button onclick="refineDoc1()" id="btnRefineDoc1">Refine Document 1 (3 remaining)</button>
 				</div>
 				<div>
 				Enter additional instructions for document 2 below:
-				<textarea id="txtDoc2Refine" name="txtDoc2Refine" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				<textarea id="txtDoc2Refine" name="txtDoc2Refine" rows="5" style="width:95%"></textarea><br/>
 				<button onclick="refineDoc2()" id="btnRefineDoc2">Refine Document 2 (3 remaining)</button>
 				</div>
 			</div>
@@ -295,8 +303,8 @@
 			<h2>Part 7 of 9: Rating the Douments</h2>
 			<p>Thank you for taking the time to refine the documents. Please rate the two documents again, based on how they’ve turned out now after the refining process.</p>
 			<div class="grid-container">
-				<div class="text-div" id="FirstResultText2" style="min-height:150px;max-height:500px"></div>
-				<div class="text-div" id="SecondResultText2" style="min-height:150px;max-height:500px"></div>
+				<div class="text-div" id="FirstResultText2"></div>
+				<div class="text-div" id="SecondResultText2"></div>
 				<div class="grid-full">
 					<center><strong>
 					Which document do you prefer overall? <br/>
@@ -319,11 +327,11 @@
 				</div>
 				<div>
 				Do you have any feedback about document 1?
-				<textarea id="txtDoc1Feedback2" name="txtDoc1Feedback1" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				<textarea id="txtDoc1Feedback2" name="txtDoc1Feedback1" rows="5" style="width:95%"></textarea><br/>
 				</div>
 				<div>
 				Do you have any feedback about document 2?
-				<textarea id="txtDoc2Feedback2" name="txtDoc2Feedback2" rows="5" style="width:95%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+				<textarea id="txtDoc2Feedback2" name="txtDoc2Feedback2" rows="5" style="width:95%"></textarea><br/>
 				</div>
 			</div>
 			<button onclick="recordFinalRatings()" id="btnRatings2">Continue</button>
@@ -332,21 +340,20 @@
 			<h2>Part 8 of 9: Results and Continuation</h2>
 			<p>Thank you for completing the study! The documents you have created are provided below for your use. If you would like to keep a copy of the documents you created, you can copy them below. Once you exit the browser or navigate away from this page, you will no longer be able to access these documents.
 			</p>
-			<table>
-			<tr>
-				<td>
-				<h3>Document #1</h3>
-				<div id="FirstResultTextExit" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
-				<br/>
+			<div class="grid-container">
+				<div>
+					<h3>Document #1</h3>
+					<div id="FirstResultTextExit" class="text-div"></div>
+					<br/>
 					<button onclick="copyDoc1()" id="btnExitFinish">Copy to Clipbord</button>
-				</td><td>
-				<h3>Document #2</h3>
-				<div id="SecondResultTextExit" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
-				<br/>
+				</div>
+				<div>
+					<h3>Document #2</h3>
+					<div id="SecondResultTextExit" class="text-div"></div>
+					<br/>
 					<button onclick="copyDoc2()" id="btnExitFinish">Copy to Clipbord</button>
-				</td>
-			</tr>
-			</table>
+				</div>
+			</div>
 			<p>Would you like to create another document, or proceed to the exit survey and exit the study?</p>
 			<button id="btnGoAgain" onClick="goAgain()">Create Another Document</button>
 			<button id="btnExit" onClick="nextStep()">Proceed to Exit Survey</button>
@@ -371,7 +378,7 @@
 			<br/>Strongly Disagree <input type="range" id="EQ5" min="0" max="10" /> Strongly Agree
 			<hr/><br/>
 			Do you have any additional feedback or comments (optional)?
-			<textarea id="txtFeedback" name="txtFeedback" rows="5" style="width:80%; font:16px/26px Georgia, Garamond, Serif"></textarea><br/>
+			<textarea id="txtFeedback" name="txtFeedback" rows="5" style="width:80%"></textarea><br/>
 			<button onclick="recordExitSurvey()" id="btnExitFinish">Finish!</button>
 		</div>
 		<div id="GoodbyeDiv">
@@ -380,21 +387,20 @@
 			<br/><br/>
 			If you would like to keep a copy of the documents you created, you can copy them below. Once you exit the browser or navigate away from this page, you will no longer be able to access these documents.
 			<br/><br/>
-			<table>
-			<tr>
-				<td>
-				<h3>Document #1</h3>
-				<div id="ThankYouDoc1" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
-				<br/>
+			<div class="grid-container">
+				<div>
+					<h3>Document #1</h3>
+					<div id="ThankYouDoc1" class="text-div"></div>
+					<br/>
 					<button onclick="copyDoc1()" id="btnExitFinish">Copy to Clipbord</button>
-				</td><td>
-				<h3>Document #2</h3>
-				<div id="ThankYouDoc2" class="text-div" style="position:relative;left:5%;width:90%;height:250px;border:1px solid #ccc;font:16px Georgia, Garamond, Serif;overflow:auto;"></div>
-				<br/>
+				</div><div>
+					<h3>Document #2</h3>
+					<div id="ThankYouDoc2" class="text-div"></div>
+					<br/>
 					<button onclick="copyDoc2()" id="btnExitFinish">Copy to Clipbord</button>
-				</td>
-			</tr>
-			</table>
+				</div>
+			</div>
+		</div>
 		</div>
 		<div id="ErrorDiv">
 			<h2>Processing Error!</h2>
@@ -406,9 +412,9 @@
 	</div>
 	</body>
 	<footer>
-	<div id="Footer" style="top:10%;height:7%;background-color:#024731;color:#EEEEEE">
+	<div id="Footer" style="background-color:#024731;color:#EEEEEE">
 	<hr/>
-	<div id="FooterText" style="position:relative;left:5%;width:90%">
+	<div id="FooterText" style="position:relative;left:5%;width:90%;height: 40px;">
 		Dr. Kimberly Binsted, Principal Investigator</br>
 		<em>Project Title:</em> Better Results Through Ambiguity Resolution: Large Language Models that Ask Clarifying Questions
 	</div>
