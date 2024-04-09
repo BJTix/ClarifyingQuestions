@@ -1,9 +1,14 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <html>
 	<title>
 		Clarifying Questions Study
 	</title>
 	<head>
 	<style>
+	body{
+		margin: auto;
+	}
 	button, input[type="button"], input[type="submit"] {
 		background-color: #024731;
 		border: none;
@@ -35,11 +40,17 @@
 	/*Slider style code from https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
 	.slidecontainer {
 	  width: 100%;
+	  display: grid;
+	  grid-template-columns: 30% 40% 30%;
+	}
+	.sliderbottom {
+		grid-column-start: 1;
+		grid-column-end: 4;
 	}
 
 	.slider {
 	  -webkit-appearance: none;
-	  width: 30%;
+	  width: 100%;
 	  height: 15px;
 	  border-radius: 5px;
 	  background: #d3d3d3;
@@ -101,20 +112,38 @@
 	textarea{
 		font: 16px Georgia, Garamond, Serif;
 	}
+	
+	/*Footer Formatting from: https://www.sitepoint.com/understanding-and-using-rem-units-in-css/*/
+	#page-container {
+	position: relative;
+	min-height: 100vh;
+		font: 16px Georgia, Garamond, Serif;
+	}
+
+	#bodyDiv {
+	padding-bottom: 4rem;    /* Footer height */
+	}
+
+	#footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 4rem;            /* Footer height */
+	}
 	</style>
 	</head>
-	<div style="height:55px;left:5%; width:90%; vertical-align:middle;position:relative;color:#002315">
-		<h1><img src="ConsentLogo.png" style="height:50;width:100;"/>
-		        Clarifying Questions Study</h1>
-	</div>
-	<hr/>
 	<Body>
+	<div id="page-container">
 	<div id="bodyDiv" style="position:relative;left:5%;width:90%;min-height:80%">
+		<div style="left:5%; width:90%; vertical-align:middle;position:relative;color:#002315">
+			<h1><img src="ConsentLogo.png" style="height:50px;"/>Document Questions Study</h1>
+		</div>
+		<hr/>
 		<div id="ConsentDiv">
 			<h2>University of Hawai‘i Online Survey Consent Form</h2>
 			Aloha! You are invited to participate in a research study conducted by Bernadette Tix from the Department of Information and Computer Science at the University of Hawai‘i. This research project is a part of a PhD Dissertation studying document creation by Artificial Intelligence programs.
 			</br></br>
-			<div style="position:relative;left:10%;width:80%;height:50%;border:1px solid #ccc;overflow: auto;" id="ConsentScroll">
+			<div class="text-div" style="position:relative;left:10%;width:80%;height:50%;border:1px solid #ccc;overflow: auto;" id="ConsentScroll">
 				<h3>What am I being asked to do?</h3>
 				If you participate in this project, you will be asked to fill out a survey, as well as engage in a back-and-forth conversation with an AI chatbot about creating a document for your personal use, such as a letter, memo, or email. 				
 				<h3>Taking part in this study is your choice.</h3>
@@ -238,7 +267,7 @@
 			<label for="txtA3" id="lblQ3"></label><br/>
 			<textarea id="txtA3" name="txtA3" rows="3" style="width:80%;left:5%"></textarea><br/><br/>
 			<div>
-			Would you like to provide any thoughts or feedback about these questions?
+			<p>Would you like to provide any thoughts or feedback about these questions?</p>
 			<textarea id="txtFeedbackOnQuestions" name="txtFeedbackOnQuestions" rows="5" style="width:80%"></textarea><br/>
 			</div>
 			<button onclick="btnQA()" id="btnQA">Continue</button>
@@ -251,22 +280,26 @@
 				<div class="text-div" id="SecondResultText"></div>
 				<div class="grid-full">
 					<center><strong>
-					Which document do you prefer overall? <br/>
-					<div class="slidecontainer">
-					  Strongly Prefer Document 1
-					  <input id="prefSlider" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
-					  Strongly Prefer Document 2
-					  </br>^</br>
-					  No Preference
-					</div><br/><br/>
-					Which document would be more useful to you in its current state? <br/>
-					<div class="slidecontainer">
-					  Document 1 is More Useful
-					  <input id="useSlider" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
-					  Document 2 is More Useful
-					  </br>^</br>
-					  Both are Equally Useful
-					</div>
+						Which document do you prefer overall? <br/>
+						<p>
+							<div class="slidecontainer">
+								<div>Strongly Prefer Document 1</div>
+								<div><input id="prefSlider" type="range" min="-10" max="10" value="0" class="slider" id="myRange"></div>
+								<div>Strongly Prefer Document 2</div>
+								<div class="sliderbottom">^</div>
+								<div class="sliderbottom">No Preference</div>
+							</div>
+						</p>
+						<p>
+							Which document would be more useful to you in its current state? <br/>
+							<div class="slidecontainer">
+								<div>Document 1 is More Useful</div>
+								<div><input id="useSlider" type="range" min="-10" max="10" value="0" class="slider" id="myRange"></div>
+								<div>Document 2 is More Useful</div>
+								<div class="sliderbottom">^</div>
+								<div class="sliderbottom">Both are Equally Useful</div>
+							</div>
+						</p>
 					</strong></center>
 				</div>
 				<div>
@@ -304,35 +337,39 @@
 			<p>Thank you for taking the time to refine the documents. Please rate the two documents again, based on how they’ve turned out now after the refining process.</p>
 			<div class="grid-container">
 				<div class="text-div" id="FirstResultText2"></div>
-				<div class="text-div" id="SecondResultText2"></div>
+				<div class="text-div" id="SecondResultText2"></div>				
 				<div class="grid-full">
 					<center><strong>
-					Which document do you prefer overall? <br/>
-					<div class="slidecontainer">
-					  Strongly Prefer Document 1
-					  <input id="prefSlider2" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
-					  Strongly Prefer Document 2
-					  </br>^</br>
-					  No Preference
-					</div><br/><br/>
-					Which document would be more useful to you in its current state? <br/>
-					<div class="slidecontainer">
-					  Document 1 is More Useful
-					  <input id="useSlider2" type="range" min="-10" max="10" value="0" class="slider" id="myRange">
-					  Document 2 is More Useful
-					  </br>^</br>
-					  Both are Equally Useful
-					</div>
+						Which document do you prefer overall? <br/>
+						<p>
+							<div class="slidecontainer">
+								<div>Strongly Prefer Document 1</div>
+								<div><input id="prefSlider2" type="range" min="-10" max="10" value="0" class="slider" id="myRange"></div>
+								<div>Strongly Prefer Document 2</div>
+								<div class="sliderbottom">^</div>
+								<div class="sliderbottom">No Preference</div>
+							</div>
+						</p>
+						<p>
+							Which document would be more useful to you in its current state? <br/>
+							<div class="slidecontainer">
+								<div>Document 1 is More Useful</div>
+								<div><input id="useSlider2" type="range" min="-10" max="10" value="0" class="slider" id="myRange"></div>
+								<div>Document 2 is More Useful</div>
+								<div class="sliderbottom">^</div>
+								<div class="sliderbottom">Both are Equally Useful</div>
+							</div>
+						</p>
 					</strong></center>
 				</div>
-				<div>
-				Do you have any feedback about document 1?
-				<textarea id="txtDoc1Feedback2" name="txtDoc1Feedback1" rows="5" style="width:95%"></textarea><br/>
-				</div>
-				<div>
-				Do you have any feedback about document 2?
-				<textarea id="txtDoc2Feedback2" name="txtDoc2Feedback2" rows="5" style="width:95%"></textarea><br/>
-				</div>
+			<div>
+			Do you have any feedback about document 1?
+			<textarea id="txtDoc1Feedback2" name="txtDoc1Feedback1" rows="5" style="width:95%"></textarea><br/>
+			</div>
+			<div>
+			Do you have any feedback about document 2?
+			<textarea id="txtDoc2Feedback2" name="txtDoc2Feedback2" rows="5" style="width:95%"></textarea><br/>
+			</div>
 			</div>
 			<button onclick="recordFinalRatings()" id="btnRatings2">Continue</button>
 		</div>
@@ -401,25 +438,21 @@
 				</div>
 			</div>
 		</div>
-		</div>
 		<div id="ErrorDiv">
 			<h2>Processing Error!</h2>
 			An error has occurred! This can happen if the AI receives unexpected input it doesn't know how to handle. Click the button below to try to recover.<br/>
 			<div id="errormsg"></div>
 			<button id="btnError" onclick="errorRecovery()">Recover</button>
+		</div>		
+	</div>
+	<footer id="footer" style="background-color:#024731;color:#EEEEEE;">
+		<div id="FooterText" style="position:relative;left:5%;width:90%;height: 3rem;top: 5px;">
+			Dr. Kimberly Binsted, Principal Investigator</br>
+			<em>Project Title:</em> Better Results Through Ambiguity Resolution: Large Language Models that Ask Clarifying Questions
 		</div>
-		
+	</footer>
 	</div>
 	</body>
-	<footer>
-	<div id="Footer" style="background-color:#024731;color:#EEEEEE">
-	<hr/>
-	<div id="FooterText" style="position:relative;left:5%;width:90%;height: 40px;">
-		Dr. Kimberly Binsted, Principal Investigator</br>
-		<em>Project Title:</em> Better Results Through Ambiguity Resolution: Large Language Models that Ask Clarifying Questions
-	</div>
-	</div>
-	</footer>
 </html>
 <script>
 //Define variables used for prompt, QA, and responses
@@ -468,7 +501,7 @@ var refinementsRemainingDoc2 = 3;
 //Determine which output will be shown first by a coin flip.
 var showQAFirst = false;
 if(Math.random() < 0.5) showQAFirst = true;
-console.log("Show QA First: " + (showQAFirst ? "yes" : "no"));
+//console.log("Show QA First: " + (showQAFirst ? "yes" : "no"));
 
 //Determine which LLM to use
 var LLM = "";
@@ -478,7 +511,8 @@ if(rand < 0.333) LLM = "Gemini";
 else if(rand < 0.666) LLM = "GPT3.5";
 else LLM = "GPT4"
 
-console.log("LLM: " + LLM);
+//console.log("LLM: " + LLM);
+window.scrollTo(0,0);
 
 /*Hide all the divs / steps.*/
 function hideAll(){
@@ -692,7 +726,7 @@ async function btnQA(){
 Record results from the first document:
 */
 async function recordInitialRatings(){
-	console.log("Recording initial ratings ...")
+	//console.log("Recording initial ratings ...")
 	btnRatings1.disabled = true;
 	//save to DB:
 	Preference = document.getElementById("prefSlider").value;
@@ -713,7 +747,7 @@ async function recordInitialRatings(){
 	}
 	//go to the next step:
 	nextStep();
-	console.log("Recorded!")
+	//console.log("Recorded!")
 }
 /*
 Refine the first document using additional user feedback:
@@ -749,7 +783,7 @@ async function refineDoc1(){
 	Doc1.innerHTML = "Please wait. The AI is generating a new document based on your feedback. This may take several minutes.";
 	
 	//submit the request to OpenAI
-	console.log((showQAFirst ? "yes" : "no"));
+	//console.log((showQAFirst ? "yes" : "no"));
 	finalQADoc = await AIConversation(strFeedback, showQAFirst);
 	
 	//update the counter:
@@ -798,7 +832,7 @@ async function refineDoc2(){
 	Doc2.innerHTML = "Please wait. The AI is generating a new document based on your feedback. This may take several minutes.";
 	
 	//submit the request to OpenAI
-	console.log((showQAFirst ? "yes" : "no"));
+	//console.log((showQAFirst ? "yes" : "no"));
 	baselineDoc = await AIConversation(strFeedback2, !showQAFirst);
 	
 	//update the counter:
@@ -838,7 +872,7 @@ async function doneRefining(){
 Record results from the documents after the user has finished giving refining prompts:
 */
 async function recordFinalRatings(){
-	console.log("Recording final ratings ...")
+	//console.log("Recording final ratings ...")
 	btnRatings1.disabled = true;
 	//save to DB:
 	Preference = document.getElementById("prefSlider2").value;
@@ -859,17 +893,17 @@ async function recordFinalRatings(){
 	}
 	//go to the next step:
 	nextStep();
-	console.log("Recorded!");
+	//console.log("Recorded!");
 }
 /*
 This function is used for people who want to go again and redo the study.
 */
 async function goAgain(){
 	//Get a new ID and record the repeat:
-	console.log("Starting a new session...");
+	//console.log("Starting a new session...");
 	var params = {"SessionID": sessionid};
 	sessionid = await AzureFunction("RepeatSession",params);
-	console.log("New Session ID: " + sessionid);
+	//console.log("New Session ID: " + sessionid);
 	
 	//Reset Variables:	
 	Doc1 = "";
@@ -915,7 +949,7 @@ async function goAgain(){
 	//Determine which output will be shown first by a coin flip.
 	showQAFirst = false;
 	if(Math.random() < 0.5) showQAFirst = true;
-	console.log("Show QA First: " + (showQAFirst ? "yes" : "no"));
+	//console.log("Show QA First: " + (showQAFirst ? "yes" : "no"));
 
 	//Determine which LLM to use
 	var rand = Math.random();
@@ -923,7 +957,7 @@ async function goAgain(){
 	if(rand < 0.333) LLM = "Gemini";
 	else if(rand < 0.666) LLM = "GPT3.5";
 	else LLM = "GPT4"
-	console.log(LLM);
+	//console.log(LLM);
 
 	//Reset the Step
 	step = 5;
@@ -933,7 +967,7 @@ async function goAgain(){
 Record results from the exit survey:
 */
 async function recordExitSurvey(){
-	console.log("Recording exit survey...")
+	//console.log("Recording exit survey...")
 	//save to DB:
 	EQ1 = document.getElementById("EQ1").value;
 	EQ2 = document.getElementById("EQ2").value;
@@ -945,7 +979,7 @@ async function recordExitSurvey(){
 	await AzureFunction("RecordExitSurvey",params);
 	//go to the next step:
 	nextStep();
-	console.log("Recorded!")
+	//console.log("Recorded!")
 }
 /*
 This function shows the processing error page. 
@@ -978,7 +1012,7 @@ function copyDoc2(){
 An error recovery function: attempt to reload the most recent step.
 */
 function errorRecovery(){
-	console.log("Attempting recovery from step " + step);
+	//console.log("Attempting recovery from step " + step);
 	step --;
 	nextStep();
 }
@@ -993,7 +1027,7 @@ async function getSessionID(){
 		return -1;
 	}
 	else{
-		console.log("Successfully obtained Session ID: " + result);
+		//console.log("Successfully obtained Session ID: " + result);
 		//If we are on the "waiting for connection" step, then advance once a good connection is established.
 		if(2 == step) nextStep();
 		sessionid = result;
@@ -1004,7 +1038,7 @@ async function getSessionID(){
 }
 async function getSessionID_inner(retries){
 	//Sometimes it takes a few tries to get a session ID, so we're going to retry if needed:
-	console.log("Attempting to get a session ID... " + retries + " retries remaining.");
+	//console.log("Attempting to get a session ID... " + retries + " retries remaining.");
 	var sessionid = await AzureFunction("GetNewSessionID",{});
 	if(sessionid.substring(0,5) == "Error"){
 		if(retries < 1) return sessionid;
@@ -1018,7 +1052,7 @@ async function getSessionID_inner(retries){
 Make a call to the OpenAI API Azure Function that I have set up ahead of time.
 */
 async function AIConversation(prompt, useQuestions){
-	console.log("OpenAI Conversation Prompt: " + prompt)
+	//console.log("OpenAI Conversation Prompt: " + prompt)
 	var params = {"prompt": prompt, "sessionid": sessionid, "LLM": LLM,"UseQuestions":(useQuestions ? "yes" : "no")};
 	var response = await AzureFunction("AIConversation",params);
 	//console.log("Response: " + response);
@@ -1039,7 +1073,7 @@ Make a call to any Azyure function in the tixclarifyingquestions function set.
 */
 async function AzureFunction(functionName, params){
 	try{
-		console.log("Azure Function Call: " + functionName);
+		//console.log("Azure Function Call: " + functionName);
 		var URI = "https://tixclarifyingquestions.azurewebsites.net/api/" + functionName + "?"
 		var response = await postData(URI, params)
 		return response;
@@ -1059,7 +1093,7 @@ async function postData(url = "", data = {}) {
   });
   
   const answer = await response.text();
-  console.log(answer);
+  //console.log(answer);
   return answer; 
 }
 
