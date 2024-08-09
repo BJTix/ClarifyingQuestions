@@ -1,7 +1,0 @@
-Clarifying Questions Database Login:
-UN: ClarifyingQuestions
-PW: hEkjqGakb4mY2f3
-
-SQL Server Connection String:
-
-Server=tcp:tixclarifyingquestions.database.windows.net,1433;Initial Catalog=ClarifyingQuestionsData;Persist Security Info=False;User ID=ClarifyingQuestions;Password=hEkjqGakb4mY2f3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
